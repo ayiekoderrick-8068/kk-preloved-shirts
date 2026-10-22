@@ -74,5 +74,18 @@ export function buildOrderMessage(lines: CartLine[], products: Product[], c: Cus
   ].join('\n')
 }
 
-export const buildWhatsAppUrl = (number: string, message: string): string =>
+/** WhatsApp link asking the shop whether one specific shirt is still available (name, SKU/ID and page link). */
+export function buildAvailabilityUrl(number: string, product: Pick<Product, 'id' | 'sku' | 'name'>, storeName: string, siteOrigin: string): string {
+  const message = [
+    `Hello ${storeName}, is this shirt still available?`,
+    '',
+    `${product.name} [${product.sku}]`,
+    `${siteOrigin.replace(/\/$/, '')}/shop/${product.id}`,
+    '',
+    'Please confirm availability and size. Thank you!',
+  ].join('\n')
+  return buildWhatsAppUrl(number, message)
+}
+
+export const buildWhatsAppUrl =(number: string, message: string): string =>
   `https://wa.me/${number.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`

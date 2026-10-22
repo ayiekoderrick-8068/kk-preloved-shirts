@@ -32,6 +32,19 @@ export function stockLabel(p: Product): string {
   }
 }
 
+export type CardStatus = { kind: 'sold'; label: string } | { kind: 'verified'; label: string } | { kind: 'check'; label: string }
+
+/**
+ * Simple status line for product cards. Only a verified stock count is ever shown as available;
+ * everything else asks the customer to check with the shop, and confirmed-sold items say "Sold out".
+ */
+export function cardStatus(p: Product): CardStatus {
+  const s = stockState(p)
+  if (s === 'sold') return { kind: 'sold', label: 'Sold out' }
+  if (s === 'in_stock') return { kind: 'verified', label: stockLabel(p) }
+  return { kind: 'check', label: 'Check availability →' }
+}
+
 /** Archived items never appear in the storefront. */
 export const storefrontProducts = (all: Product[]): Product[] => all.filter((p) => p.status !== 'archived')
 

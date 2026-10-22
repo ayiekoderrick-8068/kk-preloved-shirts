@@ -23,6 +23,10 @@ export default function Header() {
   return (
     <header className="nav">
       <div className="nav-inner">
+        <Link className="logo" to="/" aria-label={`${config.storeName} home`}>
+          <img src="/logo.png" alt="" width="56" height="56" />
+          <span className="logo-text">{config.storeName}</span>
+        </Link>
         <nav className="nav-links" aria-label="Main">
           {LINKS.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === '/'}>
@@ -30,13 +34,13 @@ export default function Header() {
             </NavLink>
           ))}
         </nav>
-        <Link className="logo" to="/" aria-label={`${config.storeName} home`}>
-          <img src="/logo.png" alt="" width="56" height="56" />
-          <span className="logo-text">{config.storeName}</span>
-        </Link>
         <div className="nav-actions">
-          <button type="button" className="mini-btn" onClick={openCart} aria-label={`Open bag, ${count} ${count === 1 ? 'item' : 'items'}`}>
-            Bag <span className="bag-count">{count}</span>
+          <button type="button" className="mini-btn bag-btn" onClick={openCart} aria-label={`Open bag, ${count} ${count === 1 ? 'item' : 'items'}`}>
+            <svg className="bag-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 8h14l-1 12H6L5 8Z" />
+              <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+            </svg>
+            <span className="bag-count" aria-hidden="true">{count}</span>
           </button>
           <button
             type="button"

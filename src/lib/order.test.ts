@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SEED_PRODUCTS } from '../data/seed'
 import type { CustomerDetails } from '../types'
-import { buildOrderMessage, buildWhatsAppUrl, normalizePhone, validateCustomer } from './order'
+import { buildAvailabilityUrl, buildOrderMessage, buildWhatsAppUrl, normalizePhone, validateCustomer } from './order'
 
 const customer: CustomerDetails = {
   fullName: 'Jane Wanjiku',
@@ -59,6 +59,14 @@ describe('buildOrderMessage', () => {
     const one = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
     expect(one).toContain('Items subtotal: KES 350')
     expect(one).not.toContain('pair deal')
+  })
+  it('builds an availability enquiry with the shirt name, SKU and page link', () => {
+    const url = buildAvailabilityUrl('254782718496', SEED_PRODUCTS[0], 'KK Pre-Loved Shirts', 'https://example.com/')
+    expect(url.startsWith('https://wa.me/254782718496?text=')).toBe(true)
+    const text = decodeURIComponent(url.split('?text=')[1])
+    expect(text).toContain('Butterfly Print Camp Shirt [KK-01]')
+    expect(text).toContain('https://example.com/shop/kk-01')
+    expect(text).toContain('still available')
   })
   it('url-encodes into a wa.me link', () => {
     const url = buildWhatsAppUrl('+254 712 345 678', 'Hi & bye\nline 2')

@@ -26,7 +26,11 @@ main:focus{outline:none}
 .nav-links{display:flex;gap:30px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .nav-links a{padding:8px 0;border-bottom:2px solid transparent}
 .nav-links a:hover,.nav-links a.active{color:var(--accent);border-color:var(--accent)}
-.logo{display:flex;align-items:center;justify-content:center;gap:10px}
+.logo{display:flex;align-items:center;justify-content:flex-start;justify-self:start;gap:10px;min-width:0}
+.nav-links{justify-self:center}
+.nav-actions{justify-self:end}
+.bag-btn{display:inline-flex;align-items:center;gap:6px;min-width:44px;justify-content:center}
+.bag-btn .bag-count{margin-left:0}
 .logo img{border-radius:50%;object-fit:cover;display:block}
 .logo-text{font-family:Manrope,sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;line-height:1.15;max-width:120px}
 .nav-actions{display:flex;justify-content:flex-end;gap:6px;align-items:center}
@@ -99,6 +103,9 @@ main:focus{outline:none}
 .detail-info p.deal{font-size:13px;font-weight:700;color:var(--accent);margin:0 0 10px}
 .price.big{font-size:24px;margin:6px 0 10px}
 .quick-btn{align-self:flex-start;margin:4px 2px 0;background:none;border:0;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:underline;min-height:44px}
+.avail-link,.avail-text{display:inline-block;font-size:12px;font-weight:600;color:var(--ink);line-height:1.4;padding:4px 0}
+.avail-link:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.is-sold-text{color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
 .stock{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px}
 .stock-in_stock{background:#e1efe7;color:var(--ok)}
 .stock-unconfirmed{background:#f5ead4;color:var(--warn)}
@@ -230,6 +237,7 @@ th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-spa
   .nav-links{display:none}
   .logo{grid-column:1;grid-row:1;justify-content:flex-start}
   .logo img{width:46px;height:46px}
+  .logo-text{font-size:11px;max-width:96px}
   .nav-toggle{display:block}
   .mobile-nav{display:none;padding:6px 5% 16px;border-top:1px solid var(--line);flex-direction:column}
   .mobile-nav.active{display:flex}

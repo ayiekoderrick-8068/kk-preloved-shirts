@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SEED_PRODUCTS } from '../data/seed'
 import type { Product } from '../types'
-import { DEFAULT_FILTERS, canAddToBag, filterProducts, maxQuantity, sortProducts, stockState, storefrontProducts, verifiedOptions } from './inventory'
+import { DEFAULT_FILTERS, canAddToBag, cardStatus, filterProducts, maxQuantity, sortProducts, stockState, storefrontProducts, verifiedOptions } from './inventory'
 
 const base = SEED_PRODUCTS[0]
 const make = (over: Partial<Product>): Product => ({ ...base, ...over })
@@ -21,6 +21,22 @@ describe('stockState / maxQuantity', () => {
     expect(canAddToBag(make({ status: 'sold' }))).toBe(false)
     expect(canAddToBag(make({ quantity: 0 }))).toBe(false)
     expect(canAddToBag(make({ status: 'archived' }))).toBe(false)
+  })
+})
+
+describe('cardStatus', () => {
+  it('asks to check availability unless stock is verified', () => {
+    expect(cardStatus(make({ quantity: null }))).toEqual({ kind: 'check', label: 'Check availability →' })
+  })
+  it('only shows availability for a verified stock count', () => {
+    expect(cardStatus(make({ quantity: 1 })).kind).toBe('verified')
+    expect(cardStatus(make({ quantity: 3 })).label).toBe('3 available')
+  })
+  it('says Sold out for confirmed-sold items, which cannot be ordered', () => {
+    for (const p of [make({ status: 'sold' }), make({ quantity: 0 })]) {
+      expect(cardStatus(p)).toEqual({ kind: 'sold', label: 'Sold out' })
+      expect(canAddToBag(p)).toBe(false)
+    }
   })
 })
 

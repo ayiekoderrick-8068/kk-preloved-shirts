@@ -164,6 +164,88 @@ for (const width of [375, 768, 1024, 1440]) {
   })
 }
 
+for (const width of [320, 375, 768, 1024, 1440]) {
+  test(`header layout at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 })
+    await page.goto('/shop')
+    const m = await page.evaluate(() => {
+      const r = (sel: string) => document.querySelector(sel)?.getBoundingClientRect()
+      const header = r('.nav-inner')!
+      const logo = r('.logo')!
+      const nav = r('.nav-links')
+      const bag = r('.bag-btn')!
+      const toggle = r('.nav-toggle')
+      const navVisible = !!nav && nav.width > 0
+      const cy = (b: DOMRect) => b.top + b.height / 2
+      return {
+        navVisible,
+        logoLeft: logo.left,
+        logoRight: logo.right,
+        navLeft: nav?.left ?? 0,
+        navRight: nav?.right ?? 0,
+        navCenter: nav ? nav.left + nav.width / 2 : 0,
+        bagLeft: bag.left,
+        bagRight: bag.right,
+        toggleRight: toggle?.right ?? 0,
+        mid: cy(header),
+        dy: [cy(logo), nav && nav.width > 0 ? cy(nav) : cy(logo), cy(bag)].map((y) => Math.abs(y - cy(header))),
+        vw: document.documentElement.clientWidth,
+        scrollW: document.documentElement.scrollWidth,
+      }
+    })
+    expect(m.scrollW).toBeLessThanOrEqual(m.vw)
+    expect(m.logoLeft).toBeLessThan(m.vw * 0.1) // far left
+    expect(m.bagRight).toBeLessThanOrEqual(m.vw)
+    for (const d of m.dy) expect(d).toBeLessThan(4) // vertically centred
+    if (width > 760) {
+      expect(m.navVisible).toBe(true)
+      expect(m.logoRight).toBeLessThanOrEqual(m.navLeft) // no overlap
+      expect(m.navRight).toBeLessThanOrEqual(m.bagLeft)
+      expect(Math.abs(m.navCenter - m.vw / 2)).toBeLessThan(8) // links centred
+      await expect(page.locator('.nav-links a.active')).toHaveText('Shop')
+      const underline = await page.locator('.nav-links a.active').evaluate((el) => getComputedStyle(el).borderBottomColor)
+      expect(underline).toBe('rgb(162, 77, 53)') // terracotta #a24d35
+    } else {
+      expect(m.navVisible).toBe(false)
+      expect(m.logoRight).toBeLessThanOrEqual(m.bagLeft)
+      expect(m.toggleRight).toBeLessThanOrEqual(m.vw)
+    }
+  })
+}
+
+test('bag counter updates when products are added and removed', async ({ page }) => {
+  await page.goto('/shop/kk-01')
+  const count = page.locator('.bag-btn .bag-count')
+  await expect(count).toHaveText('0')
+  await page.getByRole('button', { name: /Add to bag/ }).click()
+  await expect(count).toHaveText('1')
+  await page.locator('.toast').getByRole('button', { name: 'View bag' }).click()
+  await page.getByRole('dialog', { name: 'Shopping bag' }).getByRole('button', { name: 'Remove' }).click()
+  await expect(count).toHaveText('0')
+})
+
+test('product cards: "Check availability" opens a WhatsApp chat about that exact shirt', async ({ page, context }) => {
+  let waUrl = ''
+  await context.route('https://wa.me/**', (route) => {
+    waUrl = route.request().url()
+    return route.fulfill({ status: 200, body: 'ok' })
+  })
+  await page.goto('/shop')
+  await expect(page.locator('.stock')).toHaveCount(0) // beige badges are gone from cards
+  const card = page.locator('.product').first()
+  const link = card.getByRole('link', { name: /Check availability/ })
+  await expect(link).toHaveText('Check availability →')
+  const href = (await link.getAttribute('href')) ?? ''
+  expect(href).toMatch(/^https:\/\/wa\.me\/254782718496\?text=/)
+  const text = decodeURIComponent(href.split('?text=')[1])
+  expect(text).toContain('Butterfly Print Camp Shirt [KK-01]')
+  expect(text).toContain('/shop/kk-01')
+  await expect(card.getByRole('button', { name: 'Quick view' })).toBeVisible()
+  const [popup] = await Promise.all([context.waitForEvent('page'), link.click()])
+  await popup.close()
+  expect(waUrl).toContain('wa.me/254782718496')
+})
+
 test('mobile menu opens and links work', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 700 })
   await page.goto('/')
