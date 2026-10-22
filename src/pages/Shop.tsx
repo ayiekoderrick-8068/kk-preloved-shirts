@@ -21,7 +21,7 @@ export default function Shop() {
 
   return (
     <section className="section collection">
-      <Seo title="Shop all preloved shirts" description="Browse every preloved shirt at KK Preloved Shirts. Search, filter by category and availability, and sort by price." path="/shop" />
+      <Seo title="Shop all pre-loved shirts" description="Browse every pre-loved shirt at KK Pre-Loved Shirts. Search, filter by category and availability, and sort by price." path="/shop" />
       <div className="section-heading">
         <div>
           <p className="eyebrow">The complete lineup</p>

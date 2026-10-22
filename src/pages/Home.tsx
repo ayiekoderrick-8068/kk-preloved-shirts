@@ -17,17 +17,17 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Preloved shirts, one of a kind"
-        description="KK Preloved Shirts - carefully chosen preloved shirts. Every piece is a one-off, priced in KES, ordered over WhatsApp."
+        title="Pre-loved men's shirts, one of a kind"
+        description="KK Pre-Loved Shirts - curated pre-loved men's shirts from the best thrifts. Unique one-of-a-kind pieces, priced in KES, ordered over WhatsApp."
       />
       <section className="section hero">
         <div className="hero-content">
           <p className="eyebrow">01 / The shirt rail</p>
           <h1>
-            Preloved. <br />
+            Pre-loved. <br />
             One of <em>one.</em>
           </h1>
-          <p className="hero-desc">Every shirt here is a single, individually photographed piece. Browse the rail, pick what you like and send your order request on WhatsApp.</p>
+          <p className="hero-desc">Curated pre-loved men&apos;s shirts from the best thrifts: unique pieces that blend style, comfort and sustainability. Browse the rail, pick your hidden gem and send your request on WhatsApp.</p>
           <Link to="/shop" className="primary">
             Shop all <span aria-hidden="true">↗</span>
           </Link>
@@ -62,7 +62,7 @@ export default function Home() {
 
       <section className="editorial">
         <div className="editorial-copy">
-          <p className="eyebrow">Why preloved</p>
+          <p className="eyebrow">Why pre-loved</p>
           <h2>Good shirts,<br />second time round.</h2>
           <p>Each shirt is a unique piece. Sizes, measurements and condition are listed per item so you know exactly what you are getting.</p>
           <Link to="/shop" className="secondary">Browse the shop ↗</Link>

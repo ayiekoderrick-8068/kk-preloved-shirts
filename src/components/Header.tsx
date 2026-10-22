@@ -31,10 +31,8 @@ export default function Header() {
           ))}
         </nav>
         <Link className="logo" to="/" aria-label={`${config.storeName} home`}>
-          <span>
-            KK<span className="dot">.</span>
-          </span>
-          <small>PRELOVED SHIRTS</small>
+          <img src="/logo.png" alt="" width="56" height="56" />
+          <span className="logo-text">{config.storeName}</span>
         </Link>
         <div className="nav-actions">
           <button type="button" className="mini-btn" onClick={openCart} aria-label={`Open bag, ${count} ${count === 1 ? 'item' : 'items'}`}>

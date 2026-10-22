@@ -125,7 +125,10 @@ export default function CartDrawer() {
             <span>Items subtotal</span>
             <span>{formatKes(subtotal)}</span>
           </div>
-          <p className="note">Delivery fee to be confirmed by the shop. Nothing is charged online.</p>
+          <p className="note">
+            Booking fee: {formatKes(config.bookingFeeKes)} per item, paid via Pochi la Biashara {config.pochiNumber} after the shop confirms availability.
+            Delivery fee to be confirmed by the shop. Nothing is charged on this website.
+          </p>
 
           {!checkout ? (
             <button type="button" className="primary full" onClick={() => setCheckout(true)}>

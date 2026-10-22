@@ -4,15 +4,18 @@ Nothing below has been invented; each item is either blank or marked "to confirm
 
 ## Business details still needed (set as env vars, see `.env.example`)
 
-- [ ] Verified WhatsApp business number with country code → `VITE_WHATSAPP_NUMBER` (until set, checkout copies the order text instead of opening WhatsApp)
+Supplied by the owner and already in the site (please re-check): WhatsApp/call 0782718496 and 0741973359, booking fee "@200" (shown as KES 200 **per item**), payment via Pochi la Biashara 0113138779, shop description text, logo.
+
+- [ ] Confirm the booking fee really is KES 200 *per item* (the original wording was "@200")
+- [ ] Confirm which number is primary: order requests go to 0782718496
 - [ ] Public contact email → `VITE_CONTACT_EMAIL`
 - [ ] Official Instagram URL → `VITE_INSTAGRAM_URL`
 - [ ] Store city and pickup arrangements → `VITE_STORE_CITY`, `VITE_PICKUP_INFO`
 - [ ] Delivery locations, costs / quote process and timing → `VITE_DELIVERY_INFO`
 - [ ] Approved returns/exchanges policy → `VITE_RETURNS_POLICY`
-- [ ] Official logo (the header currently uses a typographic "KK." mark)
+- [ ] Logo: the supplied logo banner reads "PREE-LOVED" - confirm the spelling is intended. `public/logo.png` is 564 KB; compress it for faster loads.
 - [ ] Final domain → `VITE_SITE_URL` (canonical URLs, Open Graph, sitemap)
-- [ ] Payment methods the shop accepts (the site deliberately does not take payment)
+- [ ] Other payment methods, if any (the site deliberately does not take payment; Pochi la Biashara is shown for the booking fee)
 
 ## Per-shirt data (19 seed items, KK-01 … KK-19)
 

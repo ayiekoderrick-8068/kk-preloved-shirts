@@ -1,8 +1,14 @@
 import { expect, test } from '@playwright/test'
 
-test('customer journey: browse, add to bag, validate, prepare order request', async ({ page }) => {
+test('customer journey: browse, add to bag, validate, prepare order request', async ({ page, context }) => {
+  // Never hit real WhatsApp from tests; capture the link the app opens.
+  let waUrl = ''
+  await context.route('https://wa.me/**', (route) => {
+    waUrl = route.request().url()
+    return route.fulfill({ status: 200, body: 'ok' })
+  })
   await page.goto('/')
-  await expect(page).toHaveTitle(/KK Preloved Shirts/)
+  await expect(page).toHaveTitle(/KK Pre-Loved Shirts/)
 
   // Rail: visible next button moves the position counter.
   await expect(page.getByText('01 / 19')).toBeVisible()
@@ -31,7 +37,8 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
 
   // Checkout validation.
   await bag.getByRole('button', { name: 'Continue to order details' }).click()
-  await bag.getByRole('button', { name: /Copy order request/ }).click()
+  await expect(bag.getByText(/Booking fee: KES 200 per item/)).toBeVisible()
+  await bag.getByRole('button', { name: 'Send request on WhatsApp' }).click()
   await expect(bag.getByText('Enter your full name.')).toBeVisible()
   await expect(bag.getByText('Please agree to share')).toBeVisible()
 
@@ -39,7 +46,8 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
   await bag.getByLabel('Phone number *').fill('0712 345 678')
   await bag.getByLabel('Delivery town / estate *').fill('Kilimani, Nairobi')
   await bag.getByRole('checkbox').check()
-  await bag.getByRole('button', { name: /Copy order request/ }).click()
+  await bag.getByRole('button', { name: 'Send request on WhatsApp' }).click()
+  await expect.poll(() => waUrl).toMatch(/^https:\/\/wa\.me\/254782718496\?text=/)
 
   const text = bag.getByLabel('Order request text')
   await expect(text).toHaveValue(/Forest Flannel Shirt \[KK-04\]/)
@@ -69,7 +77,7 @@ test('mobile menu opens and links work', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Open menu' }).click()
   await page.getByRole('navigation', { name: 'Mobile' }).getByRole('link', { name: 'About' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'KK Preloved Shirts' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'KK Pre-Loved Shirts' })).toBeVisible()
 })
 
 test('unknown product shows not-found, admin is not indexed', async ({ page }) => {

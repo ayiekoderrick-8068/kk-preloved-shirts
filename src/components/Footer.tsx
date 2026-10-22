@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom'
-import { config } from '../lib/config'
+import { config, localDisplay } from '../lib/config'
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-main">
         <div>
-          <h3>
-            KK<span className="dot">.</span> PRELOVED SHIRTS
-          </h3>
-          <p>Carefully chosen preloved shirts. Every piece is one of a kind, so once it&apos;s gone, it&apos;s gone.</p>
+          <h3>{config.storeName.toUpperCase()}</h3>
+          <p>We scour the best thrifts for unique, one-of-a-kind pieces. Once a shirt is gone, it&apos;s gone.</p>
+          <p>
+            Call / WhatsApp: <a href={`tel:+${config.whatsappNumber}`}>{localDisplay(config.whatsappNumber)}</a> /{' '}
+            <a href={`tel:+${config.secondaryPhone}`}>{localDisplay(config.secondaryPhone)}</a>
+          </p>
         </div>
         <div>
           <h4>EXPLORE</h4>

@@ -58,7 +58,7 @@ export default function ProductPage() {
               {p.size === null || p.quantity === null
                 ? 'The shop will confirm size and availability when you send your order request. '
                 : ''}
-              Delivery fee is confirmed separately by the shop. No payment is taken on this website.
+              Booking is {formatKes(config.bookingFeeKes)} per item (Pochi la Biashara {config.pochiNumber}) once the shop confirms. Delivery fee is confirmed separately. No payment is taken on this website.
             </p>
             <details className="delivery">
               <summary>Delivery &amp; returns</summary>

@@ -1,6 +1,6 @@
-# KK Preloved Shirts
+# KK Pre-Loved Shirts
 
-A React + Vite + TypeScript storefront for a Kenyan preloved-shirt shop. Every shirt is treated as a unique item; sizes, measurements, condition and stock are shown only once the shop has verified them. Orders are sent as requests over WhatsApp - the site takes no payments.
+A React + Vite + TypeScript storefront for a Kenyan pre-loved men's shirt shop. Every shirt is treated as a unique item; sizes, measurements, condition and stock are shown only once the shop has verified them. Orders are sent as requests over WhatsApp - the site takes no payments.
 
 Keeps the original hanging-shirt rail and all 19 real product photos (`public/assets/`).
 
@@ -33,7 +33,7 @@ Stock rules: sold or zero-stock items cannot be added to the bag; unverified sto
 
 ## Ordering
 
-Bag → order details (name, phone, delivery/pickup, location, notes, consent) → a URL-encoded `wa.me` message listing items, quantities, sizes and the KES subtotal, with "Delivery fee: to confirm". If `VITE_WHATSAPP_NUMBER` is blank, the text is copied to the clipboard and shown in a box for manual copying. The UI states the request is not confirmed until the shop replies.
+Bag → order details (name, phone, delivery/pickup, location, notes, consent) → a URL-encoded `wa.me` message listing items, quantities, sizes and the KES subtotal, with "Delivery fee: to confirm". Shop contact details supplied by the owner are defaults in `src/lib/config.ts` (WhatsApp 0782 718 496, second line 0741 973 359, booking fee KES 200 per item, Pochi la Biashara 0113 138 779); env vars override them. If the WhatsApp number is blank, the text is copied to the clipboard and shown in a box for manual copying. The UI states the request is not confirmed until the shop replies.
 
 ## Environment variables
 
@@ -47,7 +47,7 @@ See `.env.example`. Only `VITE_` public values are used in the browser. **Never 
 
 ## Project layout
 
-```
+```text
 src/lib/        pure logic + tests (inventory, cart, order, validate, repo)
 src/context/    products, cart, toast providers
 src/components/ header, footer, rail, cards, quick view, cart/checkout drawer, modal

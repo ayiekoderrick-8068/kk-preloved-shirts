@@ -20,7 +20,7 @@ function setMeta(selector: string, attr: 'name' | 'property', key: string, conte
 }
 
 /** Per-route title, description, canonical and Open Graph tags (index.html carries the static defaults for crawlers). */
-export default function Seo({ title, description, path = '/', image = '/assets/shirt-01.webp', noindex }: Props) {
+export default function Seo({ title, description, path = '/', image = '/logo.png', noindex }: Props) {
   useEffect(() => {
     const full = title.includes(config.storeName) ? title : `${title} | ${config.storeName}`
     document.title = full

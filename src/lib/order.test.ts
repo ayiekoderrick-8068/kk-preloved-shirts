@@ -39,7 +39,7 @@ describe('validateCustomer', () => {
 describe('buildOrderMessage', () => {
   const lines = [{ productId: SEED_PRODUCTS[0].id, qty: 1 }]
   it('lists items, flags unconfirmed size, and states the delivery fee is to confirm', () => {
-    const msg = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Preloved Shirts')
+    const msg = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
     expect(msg).toContain('Sky Blue Camp Shirt [KK-01]')
     expect(msg).toContain('Size to confirm')
     expect(msg).toContain('KES 1,500')
