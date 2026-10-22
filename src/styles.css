@@ -83,10 +83,20 @@ main:focus{outline:none}
 .rail-track{position:relative;flex:1;height:2px;background:#cdc8bc}
 .rail-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);transition:width .2s}
 .rail-count{font-weight:700}
-.feature-strip{background:#eae7e0;border-block:1px solid var(--line)}
-.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-block:22px}
-.feature{display:flex;align-items:center;justify-content:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.06em}
-.feature span{display:grid;place-items:center;width:24px;height:24px;border:1px solid var(--ink);border-radius:50%;font-size:11px;flex:none}
+/* How ordering works: three illustrated steps joined by dotted connectors. */
+.how{background:#f1ede4;border-block:1px solid #d9d2c4}
+.how-grid{list-style:none;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:22px}
+.how-step{display:flex;align-items:center;gap:12px;min-width:0}
+.how-icon{flex:none;display:block;line-height:0}
+.how-num{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:16px}
+.how-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.how-copy strong{font-size:16px;line-height:1.25}
+.how-copy span{font-size:15px;line-height:1.5;color:#4a4943;max-width:200px}
+.how-sep{flex:1 1 84px;min-width:84px;display:flex;justify-content:center}
+.how-link{display:flex;align-items:center;gap:12px}
+.how-line{display:block;width:28px;height:1px;background:#c98f78;position:relative}
+.how-line:after{content:'';position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--accent)}
+.how-chevron{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#eadfce;color:var(--ink);font-size:22px;line-height:1;padding-bottom:3px}
 
 /* sections + grid */
 .collection,.spotlight{padding-top:80px;padding-bottom:90px}
@@ -244,6 +254,7 @@ table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
 th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
 .row-actions button{margin-right:6px;padding:6px 10px;border:1px solid var(--line);background:#fff;font-size:12px;min-height:34px}
 
+@media(max-width:1180px){.how-sep{display:none}.how-grid{gap:24px;align-items:flex-start}.how-step{flex:1;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"icon num" "copy copy";align-items:center;column-gap:12px;row-gap:10px}.how-icon{grid-area:icon}.how-num{grid-area:num;justify-self:start;width:36px;height:36px;font-size:14px}.how-copy{grid-area:copy}.how-copy strong{font-size:16px}.how-copy span{font-size:14px}}
 @media(max-width:1050px){.hero{grid-template-columns:40% 60%;padding-left:5.2%}.hero-visual{height:580px}.hero-content{padding-right:16px}.rail-hint{display:none}.products{grid-template-columns:repeat(3,minmax(0,1fr))}.spotlight .products{grid-template-columns:repeat(2,minmax(0,1fr))}.nav-links{gap:16px}.editorial-copy{padding:56px 6%}.product-name{min-height:2.8em}}
 @media(min-width:900px) and (max-width:1050px){.spotlight .products{grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 14px}}
 @media(max-width:760px){
@@ -266,8 +277,11 @@ th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-spa
   .rail-head{top:44px}
   .circle{width:42px;height:42px}
   .search-btn,.nav-divider{display:none}
-  .feature-grid{grid-template-columns:1fr}
-  .feature{justify-content:flex-start}
+  .how-grid{flex-direction:column;align-items:stretch;gap:14px;padding-block:20px}
+  .how-step{flex:none;display:flex;gap:14px}
+  .how-icon svg{width:64px;height:64px}
+  .how-num{width:36px;height:36px}
+  .how-copy span{max-width:none}
   .collection,.spotlight{padding-top:56px;padding-bottom:60px}
   .section-heading{flex-direction:column;align-items:flex-start}
   .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 12px}

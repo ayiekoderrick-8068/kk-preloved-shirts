@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import HangingRail from '../components/HangingRail'
+import HowItWorks from '../components/HowItWorks'
 import ProductCard from '../components/ProductCard'
 import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
 import { pickHomepage } from '../lib/home'
 import { stockState } from '../lib/inventory'
-import { pairDealText } from '../lib/pricing'
 import { useMemo, useState } from 'react'
 import type { Product } from '../types'
 
@@ -38,13 +38,7 @@ export default function Home() {
         {loading ? <div className="hero-visual rail-status">Loading the rail…</div> : error ? <div className="hero-visual rail-status" role="alert">We couldn&apos;t load the shirts right now. Please refresh.</div> : <HangingRail products={rail} />}
       </section>
 
-      <section className="feature-strip" aria-label="How ordering works">
-        <div className="section feature-grid">
-          <div className="feature"><span aria-hidden="true">1</span> Pick your pieces: {pairDealText()}</div>
-          <div className="feature"><span aria-hidden="true">2</span> Send your request on WhatsApp</div>
-          <div className="feature"><span aria-hidden="true">3</span> The shop confirms size, availability and delivery</div>
-        </div>
-      </section>
+      <HowItWorks />
 
       {featured.length > 0 && (
         <section className="section spotlight">
