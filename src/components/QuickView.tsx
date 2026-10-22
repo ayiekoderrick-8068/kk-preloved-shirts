@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useCart } from '../context/CartContext'
 import { priceLabel } from '../lib/inventory'
 import { pairDealText } from '../lib/pricing'
 import type { Product } from '../types'
@@ -13,6 +15,12 @@ interface Props {
 }
 
 export default function QuickView({ product: p, onClose }: Props) {
+  const { isOpen: bagOpen } = useCart()
+  // Opening the bag (e.g. from the toast's "View bag") replaces the quick view instead of stacking on it.
+  useEffect(() => {
+    if (bagOpen && p) onClose()
+  }, [bagOpen, p, onClose])
+
   return (
     <Modal open={p !== null} onClose={onClose} label={p ? `Quick view: ${p.name}` : 'Quick view'} variant="modal">
       {p && (

@@ -31,6 +31,10 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
 
   // Add to bag; a one-off cannot be added twice.
   await page.getByRole('button', { name: /Add to bag/ }).click()
+  // The bag does not open by itself: a corner toast confirms and offers "View bag".
+  await expect(page.getByRole('dialog', { name: 'Shopping bag' })).toBeHidden()
+  await expect(page.getByRole('button', { name: 'Added to bag' })).toBeDisabled()
+  await page.locator('.toast').getByRole('button', { name: 'View bag' }).click()
   const bag = page.getByRole('dialog', { name: 'Shopping bag' })
   await expect(bag.getByText('One-off piece')).toBeVisible()
   await expect(bag.getByText('KES 350').first()).toBeVisible()
@@ -70,6 +74,52 @@ for (const width of [320, 375, 768, 1024, 1440]) {
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
       expect(overflow, `${path} at ${width}px`).toBeLessThanOrEqual(0)
     }
+  })
+}
+
+for (const vp of [
+  { name: 'desktop', width: 1280, height: 800 },
+  { name: 'mobile', width: 375, height: 560 },
+]) {
+  test(`quick view stays clean after adding to bag (${vp.name})`, async ({ page }) => {
+    await page.setViewportSize({ width: vp.width, height: vp.height })
+    await page.goto('/shop')
+    await page.getByRole('button', { name: 'Quick view' }).first().click()
+    const modal = page.getByRole('dialog', { name: /Quick view/ })
+    await expect(modal).toBeVisible()
+
+    // Modal scrolls inside its own max-height instead of overflowing the viewport.
+    const box = await modal.evaluate((el) => {
+      const cs = getComputedStyle(el)
+      return { overflowY: cs.overflowY, height: el.getBoundingClientRect().height, vh: window.innerHeight }
+    })
+    expect(box.overflowY).toBe('auto')
+    expect(box.height).toBeLessThanOrEqual(box.vh)
+
+    await modal.getByRole('button', { name: /Add to bag/ }).click()
+
+    // No full-width "in your bag" bar inside the modal; the button just settles into a disabled "Added" state.
+    await expect(modal.getByText(/view bag/i)).toHaveCount(0)
+    await expect(modal.getByRole('button', { name: 'Added to bag' })).toBeDisabled()
+
+    // Toast: inside the viewport, in a corner, and above the modal in stacking order.
+    const toast = page.locator('.toast')
+    await expect(toast).toContainText('Added to bag')
+    const t = await toast.boundingBox()
+    expect(t).not.toBeNull()
+    expect(t!.x + t!.width).toBeLessThanOrEqual(vp.width)
+    expect(t!.y + t!.height).toBeLessThanOrEqual(vp.height)
+    expect(t!.y).toBeGreaterThan(vp.height / 2) // bottom corner
+    const onTop = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('.toast') !== null, {
+      x: t!.x + t!.width / 2,
+      y: t!.y + t!.height / 2,
+    })
+    expect(onTop).toBe(true)
+
+    // "View bag" swaps the quick view for the bag drawer rather than stacking both.
+    await toast.getByRole('button', { name: 'View bag' }).click()
+    await expect(page.getByRole('dialog', { name: 'Shopping bag' })).toBeVisible()
+    await expect(page.getByRole('dialog', { name: /Quick view/ })).toBeHidden()
   })
 }
 
