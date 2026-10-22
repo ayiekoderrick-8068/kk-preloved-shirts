@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
@@ -16,6 +17,15 @@ export default function Shop() {
 
   const sizes = useMemo(() => verifiedOptions(live, 'size'), [live])
   const conditions = useMemo(() => verifiedOptions(live, 'condition'), [live])
+  const searchRef = useRef<HTMLInputElement>(null)
+  const location = useLocation()
+  const focusToken = (location.state as { focusSearch?: number } | null)?.focusSearch
+
+  // The header's search icon lands here and focuses the search box.
+  useEffect(() => {
+    if (focusToken) searchRef.current?.focus()
+  }, [focusToken])
+
   const results = useMemo(() => sortProducts(filterProducts(live, filters), sort), [live, filters, sort])
   const set = <K extends keyof ProductFilters>(k: K, v: ProductFilters[K]) => setFilters((f) => ({ ...f, [k]: v }))
   const active = JSON.stringify(filters) !== JSON.stringify(DEFAULT_FILTERS)
@@ -36,7 +46,7 @@ export default function Shop() {
       <form className="toolbar" role="search" aria-label="Filter shirts" onSubmit={(e) => e.preventDefault()}>
         <label className="grow">
           <span className="label">Search</span>
-          <input type="search" value={filters.query} onChange={(e) => set('query', e.target.value)} placeholder="Name, colour, SKU…" />
+          <input ref={searchRef} type="search" value={filters.query} onChange={(e) => set('query', e.target.value)} placeholder="Name, colour, SKU…" />
         </label>
         <label>
           <span className="label">Category</span>

@@ -1,27 +1,35 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { priceLabel } from '../lib/inventory'
 import type { Product } from '../types'
 import ProductImage from './ProductImage'
 
-/** The signature hanging-shirt rail: drag with a mouse, swipe on touch, arrow keys, or the prev/next buttons. */
+/**
+ * The signature hanging-shirt rail: shirts hang from a rod on strings. Drag with a mouse, swipe on touch,
+ * use the arrow keys, or the prev/next buttons.
+ */
 export default function HangingRail({ products }: { products: Product[] }) {
   const navigate = useNavigate()
   const rail = useRef<HTMLDivElement>(null)
   const drag = useRef({ active: false, startX: 0, left: 0, moved: false })
   const [index, setIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
 
   const itemWidth = () => rail.current?.firstElementChild?.getBoundingClientRect().width || 1
 
   const onScroll = useCallback(() => {
     const el = rail.current
-    if (el) setIndex(Math.min(Math.round(el.scrollLeft / itemWidth()), Math.max(products.length - 1, 0)))
+    if (!el) return
+    const step = itemWidth() + 24
+    setIndex(Math.min(Math.round(el.scrollLeft / step), Math.max(products.length - 1, 0)))
+    setProgress(Math.min(1, (el.scrollLeft + el.clientWidth) / Math.max(el.scrollWidth, 1)))
   }, [products.length])
 
   useEffect(() => {
     onScroll()
   }, [onScroll])
 
-  const step = (dir: 1 | -1) => rail.current?.scrollBy({ left: dir * itemWidth(), behavior: 'smooth' })
+  const step = (dir: 1 | -1) => rail.current?.scrollBy({ left: dir * (itemWidth() + 24), behavior: 'smooth' })
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight') {
@@ -47,8 +55,11 @@ export default function HangingRail({ products }: { products: Product[] }) {
     drag.current.active = false
   }
 
+  const pad = (n: number) => String(n).padStart(2, '0')
+
   return (
     <div className="hero-visual">
+      <div className="rod" aria-hidden="true" />
       <div className="rail-head">
         <span>THE HANGING EDIT - {products.length} PIECES</span>
         <div className="rail-controls">
@@ -81,16 +92,38 @@ export default function HangingRail({ products }: { products: Product[] }) {
           }
         }}
       >
-        {products.map((p) => (
-          <button key={p.id} type="button" className="hanger" aria-label={`View ${p.name}`} onClick={() => navigate(`/shop/${p.id}`)} draggable={false}>
-            <ProductImage src={p.images[0]} alt="" loading="lazy" draggable={false} />
-          </button>
-        ))}
+        {products.map((p) => {
+          return (
+            <div key={p.id} className="hanger">
+              <svg className="hook" width="26" height="22" viewBox="0 0 26 22" fill="none" aria-hidden="true">
+                <path d="M13 21V13m0 0c-3-1-4-4-1.5-5.5C13.500 6 16 7.500 15.500 10" stroke="#1d1d1a" strokeWidth="1.600" strokeLinecap="round" />
+                <circle cx="13" cy="3" r="2.200" fill="#1d1d1a" />
+              </svg>
+              <button type="button" className="hanger-card" aria-label={`View ${p.name}`} onClick={() => navigate(`/shop/${p.id}`)} draggable={false}>
+                <span className="hanger-photo">
+                  <ProductImage src={p.images[0]} alt="" loading="lazy" draggable={false} />
+                </span>
+                <span className="hanger-info">
+                  <span className="hanger-name">{p.name}</span>
+                  <span className="hanger-price">{priceLabel(p)}</span>
+                </span>
+                <span className="hanger-kind">
+                  {p.category} · {p.size ? `Size ${p.size}` : 'Size to confirm'}
+                </span>
+              </button>
+            </div>
+          )
+        })}
       </div>
       <div className="rail-bottom">
-        <span>← DRAG, SWIPE OR USE ARROW KEYS →</span>
-        <span aria-live="off">
-          {String(Math.min(index + 1, products.length)).padStart(2, '0')} / {String(products.length).padStart(2, '0')}
+        <span className="rail-hint">
+          <span aria-hidden="true">←</span> DRAG, SWIPE OR USE ARROW KEYS <span aria-hidden="true">→</span>
+        </span>
+        <span className="rail-track" aria-hidden="true">
+          <span className="rail-fill" style={{ width: `${Math.round(progress * 100)}%` }} />
+        </span>
+        <span aria-live="off" className="rail-count">
+          {pad(Math.min(index + 1, products.length))} / {pad(products.length)}
         </span>
       </div>
     </div>

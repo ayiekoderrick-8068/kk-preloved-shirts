@@ -29,9 +29,10 @@ export default function Home() {
             Pre-loved. <br />
             One of <em>one.</em>
           </h1>
+          <span className="hero-rule" aria-hidden="true" />
           <p className="hero-desc">Curated pre-loved men&apos;s shirts from the best thrifts: unique pieces that blend style, comfort and sustainability. Browse the rail, pick your hidden gem and send your request on WhatsApp.</p>
           <Link to="/shop" className="primary">
-            Shop all <span aria-hidden="true">↗</span>
+            Shop all <span aria-hidden="true">→</span>
           </Link>
         </div>
         {loading ? <div className="hero-visual rail-status">Loading the rail…</div> : error ? <div className="hero-visual rail-status" role="alert">We couldn&apos;t load the shirts right now. Please refresh.</div> : <HangingRail products={rail} />}
