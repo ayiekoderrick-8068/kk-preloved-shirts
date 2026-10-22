@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('customer journey: browse, add to bag, validate, prepare order request', async ({ page, context }) => {
   // Never hit real WhatsApp from tests; capture the link the app opens.
@@ -11,14 +11,14 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
   await expect(page).toHaveTitle(/KK Pre-Loved Shirts/)
 
   // Rail: visible next button moves the position counter.
-  await expect(page.getByText('01 / 19')).toBeVisible()
+  await expect(page.getByText('01 / 36')).toBeVisible()
   await page.getByRole('button', { name: 'Next shirts' }).click()
-  await expect(page.getByText('02 / 19')).toBeVisible()
+  await expect(page.getByText('02 / 36')).toBeVisible()
 
   // Shop: search narrows results, empty state offers a reset.
   await page.getByRole('link', { name: 'Shop', exact: true }).first().click()
-  await expect(page.getByText('19 shirts')).toBeVisible()
-  await page.getByRole('searchbox').fill('flannel')
+  await expect(page.getByText('36 shirts')).toBeVisible()
+  await page.getByRole('searchbox').fill('hibiscus')
   await expect(page.getByText('1 shirt', { exact: true })).toBeVisible()
   await page.getByRole('searchbox').fill('zzzz')
   await expect(page.getByText('No shirts match those filters.')).toBeVisible()
@@ -26,14 +26,14 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
 
   // Deep-linkable product page with honest unverified details.
   await page.goto('/shop/kk-04')
-  await expect(page.getByRole('heading', { level: 1, name: 'Forest Flannel Shirt' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Blue Hibiscus Print Shirt' })).toBeVisible()
   await expect(page.getByText('Details to confirm').first()).toBeVisible()
 
   // Add to bag; a one-off cannot be added twice.
   await page.getByRole('button', { name: /Add to bag/ }).click()
   const bag = page.getByRole('dialog', { name: 'Shopping bag' })
   await expect(bag.getByText('One-off piece')).toBeVisible()
-  await expect(bag.getByText('KES 1,800').first()).toBeVisible()
+  await expect(bag.getByText('Price to confirm').first()).toBeVisible()
 
   // Checkout validation.
   await bag.getByRole('button', { name: 'Continue to order details' }).click()
@@ -50,7 +50,7 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
   await expect.poll(() => waUrl).toMatch(/^https:\/\/wa\.me\/254782718496\?text=/)
 
   const text = bag.getByLabel('Order request text')
-  await expect(text).toHaveValue(/Forest Flannel Shirt \[KK-04\]/)
+  await expect(text).toHaveValue(/Blue Hibiscus Print Shirt \[KK-04\]/)
   await expect(text).toHaveValue(/Delivery fee: to confirm/)
   await expect(bag.getByText(/NOT confirmed until the shop replies/).first()).toBeVisible()
 
@@ -87,3 +87,4 @@ test('unknown product shows not-found, admin is not indexed', async ({ page }) =
   await expect(page.getByText('Demo mode - no database connected.')).toBeVisible()
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow')
 })
+

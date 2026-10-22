@@ -25,11 +25,15 @@ describe('stockState / maxQuantity', () => {
 })
 
 describe('seed data', () => {
-  it('keeps all 19 products, each with a real image and nothing invented', () => {
-    expect(SEED_PRODUCTS).toHaveLength(19)
-    expect(new Set(SEED_PRODUCTS.map((p) => p.sku)).size).toBe(19)
+  it('has unique products, each with real photos and nothing invented', () => {
+    expect(SEED_PRODUCTS.length).toBeGreaterThanOrEqual(30)
+    expect(new Set(SEED_PRODUCTS.map((p) => p.sku)).size).toBe(SEED_PRODUCTS.length)
+    const photos = SEED_PRODUCTS.flatMap((p) => p.images)
+    expect(new Set(photos).size).toBe(photos.length) // a photo belongs to exactly one product
     for (const p of SEED_PRODUCTS) {
-      expect(p.images[0]).toMatch(/^\/assets\/shirt-\d\d\.webp$/)
+      expect(p.images.length).toBeGreaterThan(0)
+      for (const img of p.images) expect(img).toMatch(/^\/assets\/products\/p-\d{3}\.webp$/)
+      expect(p.priceKes).toBeNull()
       expect(p.size).toBeNull()
       expect(p.condition).toBeNull()
       expect(p.quantity).toBeNull()
@@ -43,6 +47,11 @@ describe('filter and sort', () => {
     make({ id: 'b', name: 'Beta', priceKes: 1000, size: 'L', condition: 'Like new', status: 'sold' }),
     make({ id: 'c', name: 'Gamma', priceKes: 1500, size: null, condition: null }),
   ]
+  it('sorts unpriced items last in both price directions', () => {
+    const withNull = [...products, make({ id: 'n', name: 'Nope', priceKes: null })]
+    expect(sortProducts(withNull, 'price-asc').map((p) => p.id)).toEqual(['b', 'c', 'a', 'n'])
+    expect(sortProducts(withNull, 'price-desc').map((p) => p.id)).toEqual(['a', 'c', 'b', 'n'])
+  })
   it('searches by name', () => {
     expect(filterProducts(products, { ...DEFAULT_FILTERS, query: 'gam' }).map((p) => p.id)).toEqual(['c'])
   })

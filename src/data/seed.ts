@@ -1,57 +1,83 @@
 import type { Category, Product } from '../types'
 
 /**
- * Seed inventory: the 19 photographed shirts from the original prototype.
+ * Seed inventory built from the shop's own photos (public/assets/products/p-NNN.webp, where NNN is the
+ * original photo number). Photos were grouped per garment by eye from contact sheets, so a grouping may
+ * be wrong: check each product's photos in the admin area before launch.
  *
- * VERIFIED   : the photo, the working name and the category / listed price carried over from the prototype.
- * UNVERIFIED : size, measurements, condition, flaws and stock quantity are all null.
- *              The storefront shows "Details to confirm" for these - nothing is guessed.
- * The shop must confirm each row (see LAUNCH_CHECKLIST.md) via the admin area or the database.
+ * VERIFIED   : the photos themselves, and the sleeve length visible in them.
+ * UNVERIFIED : name (a plain description of what the photo shows), price, size, measurements, condition,
+ *              flaws and stock are all unknown (null) and shown as "to confirm" in the storefront.
+ *              Nothing is guessed. The shop must confirm each row (see LAUNCH_CHECKLIST.md).
+ *
+ * The original 19 cut-out images from the prototype (public/assets/shirt-NN.webp) are preserved but no longer
+ * used, because the cut-outs were of unnamed shirts that cannot be matched to these products reliably.
  */
 const SEED_DATE = '2026-10-22T00:00:00.000Z'
 
-type Row = [n: number, name: string, category: Category, price: number, description: string, tag?: string]
+type Row = [name: string, category: Category, photos: number[], featured?: boolean]
+
+const S: Category = 'Short sleeve'
+const L: Category = 'Long sleeve'
 
 const ROWS: Row[] = [
-  [1, 'Sky Blue Camp Shirt', 'Short sleeve', 1500, 'Camp collar, textured weave and an embroidered chest logo.', 'Popular'],
-  [2, 'Black Long-Sleeve Shirt', 'Long sleeve', 1800, 'Hidden placket, chest pocket and tonal embroidery.'],
-  [3, 'Crinkle Camp Shirt', 'Short sleeve', 1200, 'Camp collar, patch pocket and a soft crinkled cotton finish.', 'New in'],
-  [4, 'Forest Flannel Shirt', 'Long sleeve', 1800, 'Two flap pockets, horn-style buttons and a brushed green flannel.', 'Popular'],
-  [5, 'Dusty Rose Shirt', 'Short sleeve', 1200, 'Classic collar, chest pocket and a small yellow label at the hem.'],
-  [6, 'Butterfly Panel Shirt', 'Short sleeve', 1500, 'Camp collar with a butterfly print band across the chest.', 'New in'],
-  [7, 'Taupe Jacquard Shirt', 'Short sleeve', 1500, 'Tonal floral jacquard with vertical stripes and camp collar.'],
-  [8, 'Abstract Print Shirt', 'Long sleeve', 2000, 'Painterly print in sand, blue and grey with aqua buttons.'],
-  [9, 'White Seersucker Shirt', 'Short sleeve', 1200, 'Camp collar, chest pocket and light striped seersucker.', 'Popular'],
-  [10, 'Black Hooded Shirt', 'Short sleeve', 1500, 'Lightweight hooded shirt with drawstrings and a half placket.'],
-  [11, 'Tan Utility Shirt', 'Long sleeve', 1800, 'Two button-flap chest pockets and cuffs with a clean drape.'],
-  [12, 'Grey Plaid Shirt', 'Short sleeve', 1500, 'Camp collar, soft plaid and a chest pocket with a small label.'],
-  [13, 'Cream Long-Sleeve Shirt', 'Long sleeve', 1800, 'Lightly crinkled weave with a chest pocket and shell buttons.', 'New in'],
-  [14, 'Black Utility Shirt', 'Long sleeve', 1800, 'Two chest pockets and a soft, garment-washed black cotton.'],
-  [15, 'Cream Pocket Shirt', 'Short sleeve', 1200, 'Two flap pockets and a smooth, easy-hanging fabric.'],
-  [16, 'Pale Blue Shirt', 'Short sleeve', 1200, 'Classic collar, chest pocket and a fine textured weave.'],
-  [17, 'Ivory Linen Shirt', 'Short sleeve', 1500, 'Linen-look weave in ivory with a roomy chest pocket.'],
-  [18, 'Sand Camp Shirt', 'Short sleeve', 1200, 'Camp collar and snap-style front in a light sand cotton.', 'New in'],
-  [19, 'Ivory Stripe Shirt', 'Short sleeve', 1200, 'Tonal stripes, chest pocket and pearl-style buttons.'],
+  ['Butterfly Print Camp Shirt', S, [80, 81, 131, 132], true],
+  ['Cream Camp Shirt with Coconut Buttons', S, [78, 79, 152, 153], true],
+  ['White Palm-Print Camp Shirt', S, [92, 93, 135, 136], true],
+  ['Blue Hibiscus Print Shirt', S, [96, 97, 137, 138], true],
+  ['Dusty Pink Short-Sleeve Shirt', S, [94, 95, 139, 140]],
+  ['Grey Hooded Short-Sleeve Shirt', S, [109, 110, 143, 144]],
+  ['Rust Orange Two-Pocket Shirt', S, [89, 90]],
+  ['Teal Blue Two-Pocket Shirt', S, [103, 104, 141, 142]],
+  ['Blue i9 Sports Camp Shirt', S, [98, 125]],
+  ['White and Black Panel Camp Shirt', S, [105, 106, 41]],
+  ['Silver Pinstripe Camp Shirt', S, [113, 114, 123]],
+  ['White Textured Short-Sleeve Shirt', S, [107, 108, 127, 128]],
+  ['Beige Half-Zip Shirt', S, [99, 100, 133, 134]],
+  ['Cream Linen-Look Pocket Shirt', S, [117, 118, 129, 130, 154]],
+  ['Black Short-Sleeve Camp Shirt', S, [86, 87, 122]],
+  ['Slate Blue Short-Sleeve Shirt', S, [91]],
+  ['Beige Short-Sleeve Shirt', S, [84, 85]],
+  ['Black Two-Pocket Long-Sleeve Shirt', L, [101, 102, 148, 149]],
+  ['Dark Green Two-Pocket Long-Sleeve Shirt', L, [119, 120, 126]],
+  ['Beige Two-Pocket Long-Sleeve Shirt', L, [115, 116, 124]],
+  ['White French-Cuff Shirt', L, [111, 112, 145, 146]],
+  ['Cream Long-Sleeve Camp Shirt', L, [82, 83, 150, 151]],
+  ['Navy Knit Long-Sleeve Shirt', L, [88, 147]],
+  ['Abstract Print Long-Sleeve Shirt', L, [121]],
+  ['Red Embroidered Camp Shirt', S, [31, 32, 58, 72]],
+  ['Royal Blue Short-Sleeve Shirt', S, [27, 28, 59, 75]],
+  ['Brown Textured Short-Sleeve Shirt', S, [21, 22, 65, 73]],
+  ['Plaid Camp Shirt', S, [39, 40, 67]],
+  ['Charcoal Short-Sleeve Shirt', S, [29, 30, 61, 76, 42]],
+  ['Charcoal Long-Sleeve Shirt', L, [16, 17, 63, 64, 71]],
+  ['Dark Hooded Short-Sleeve Shirt', S, [18, 19, 20, 53]],
+  ['Cream Graphic-Print Shirt', S, [33, 34, 57, 68]],
+  ['Beige Pocket Shirt', S, [23, 24, 62, 69]],
+  ['Beige Pleated-Panel Shirt', S, [25, 26, 60, 74]],
+  ['Green and Cream Panel Shirt', S, [10, 11, 54, 77]],
+  ['Blue Camp Shirt', S, [2, 3, 49]],
 ]
 
-export const SEED_PRODUCTS: Product[] = ROWS.map(([n, name, category, priceKes, description]) => {
-  // The prototype's "Bestseller / New in" badges were unverified marketing claims, so they are not carried over.
-  const num = String(n).padStart(2, '0')
+const photo = (n: number) => `/assets/products/p-${String(n).padStart(3, '0')}.webp`
+
+export const SEED_PRODUCTS: Product[] = ROWS.map(([name, category, photos, featured], i) => {
+  const num = String(i + 1).padStart(2, '0')
   return {
     id: `kk-${num}`,
     sku: `KK-${num}`,
     name,
     category,
-    description,
-    priceKes,
+    description: '',
+    priceKes: null,
     size: null,
     measurements: null,
     condition: null,
     flaws: null,
     quantity: null,
     status: 'available',
-    images: [`/assets/shirt-${num}.webp`],
-    featured: [1, 4, 8, 13, 17, 6].includes(n),
+    images: photos.map(photo),
+    featured: featured === true,
     createdAt: SEED_DATE,
     updatedAt: SEED_DATE,
   }

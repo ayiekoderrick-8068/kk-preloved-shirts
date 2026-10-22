@@ -2,6 +2,10 @@ import type { Category, Product, StockState } from '../types'
 
 export const formatKes = (n: number): string => 'KES ' + Math.round(n).toLocaleString('en-KE')
 
+/** Customer-facing price text; never a made-up number. */
+export const priceLabel = (p: Pick<Product, 'priceKes'>, qty = 1): string =>
+  p.priceKes === null ? 'Price to confirm' : formatKes(p.priceKes * qty)
+
 export function stockState(p: Product): StockState {
   if (p.status === 'sold' || p.quantity === 0) return 'sold'
   if (p.quantity !== null && p.quantity > 0) return 'in_stock'
@@ -67,10 +71,11 @@ export function filterProducts(products: Product[], f: ProductFilters): Product[
 export function sortProducts(products: Product[], sort: SortKey): Product[] {
   const list = [...products]
   switch (sort) {
+    // Unpriced items always sort last so a missing price never reads as "cheapest".
     case 'price-asc':
-      return list.sort((a, b) => a.priceKes - b.priceKes)
+      return list.sort((a, b) => (a.priceKes ?? Infinity) - (b.priceKes ?? Infinity) || 0)
     case 'price-desc':
-      return list.sort((a, b) => b.priceKes - a.priceKes)
+      return list.sort((a, b) => (b.priceKes ?? -Infinity) - (a.priceKes ?? -Infinity) || 0)
     case 'name':
       return list.sort((a, b) => a.name.localeCompare(b.name))
     default:

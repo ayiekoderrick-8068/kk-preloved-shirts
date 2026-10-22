@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { SEED_PRODUCTS } from '../data/seed'
 import type { Product } from '../types'
-import { addLine, cartCount, cartSubtotal, parseStoredCart, reconcileCart, removeLine, setLineQty } from './cart'
+import { addLine, cartCount, cartSubtotal, parseStoredCart, reconcileCart, removeLine, setLineQty, unpricedCount } from './cart'
 
-const one = SEED_PRODUCTS[0]
-const two = SEED_PRODUCTS[1]
+const one: Product = { ...SEED_PRODUCTS[0], priceKes: 1500 }
+const two: Product = { ...SEED_PRODUCTS[1], priceKes: 1800 }
 const multi: Product = { ...SEED_PRODUCTS[2], quantity: 3 }
 const sold: Product = { ...SEED_PRODUCTS[3], status: 'sold' }
 
@@ -29,8 +29,17 @@ describe('cart', () => {
     let lines = addLine([], one).lines
     lines = addLine(lines, two).lines
     expect(cartCount(lines)).toBe(2)
-    expect(cartSubtotal(lines, SEED_PRODUCTS)).toBe(one.priceKes + two.priceKes)
+    expect(cartSubtotal(lines, [one, two])).toBe(3300)
     expect(removeLine(lines, one.id)).toHaveLength(1)
+  })
+  it('counts unpriced lines separately and keeps them out of the subtotal', () => {
+    const unpriced: Product = { ...SEED_PRODUCTS[4], priceKes: null }
+    const lines = [
+      { productId: one.id, qty: 1 },
+      { productId: unpriced.id, qty: 1 },
+    ]
+    expect(cartSubtotal(lines, [one, unpriced])).toBe(1500)
+    expect(unpricedCount(lines, [one, unpriced])).toBe(1)
   })
   it('reconciles stale, sold and over-quantity lines', () => {
     const lines = [

@@ -39,12 +39,19 @@ describe('validateCustomer', () => {
 describe('buildOrderMessage', () => {
   const lines = [{ productId: SEED_PRODUCTS[0].id, qty: 1 }]
   it('lists items, flags unconfirmed size, and states the delivery fee is to confirm', () => {
-    const msg = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
-    expect(msg).toContain('Sky Blue Camp Shirt [KK-01]')
+    const priced = SEED_PRODUCTS.map((p, i) => (i === 0 ? { ...p, priceKes: 1500 } : p))
+    const msg = buildOrderMessage(lines, priced, customer, 'KK Pre-Loved Shirts')
+    expect(msg).toContain('Butterfly Print Camp Shirt [KK-01]')
     expect(msg).toContain('Size to confirm')
     expect(msg).toContain('KES 1,500')
     expect(msg).toContain('Delivery fee: to confirm')
     expect(msg).toContain('not a confirmed order')
+  })
+  it('never invents a price for unpriced items', () => {
+    const msg = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
+    expect(msg).toContain('Price to confirm')
+    expect(msg).toContain('1 item(s) with price to confirm')
+    expect(msg).not.toMatch(/KES [1-9]/)
   })
   it('url-encodes into a wa.me link', () => {
     const url = buildWhatsAppUrl('+254 712 345 678', 'Hi & bye\nline 2')

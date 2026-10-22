@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
-import { formatKes, stockLabel } from '../lib/inventory'
+import { priceLabel, stockLabel } from '../lib/inventory'
 import { uploadImage } from '../lib/productRepo'
 import { supabase } from '../lib/supabase'
 import { CATEGORIES, CONDITIONS, STATUSES, validateProduct, type ProductErrors } from '../lib/validate'
@@ -17,7 +17,7 @@ function blankProduct(count: number): Product {
     name: '',
     category: 'Short sleeve',
     description: '',
-    priceKes: 0,
+    priceKes: null,
     size: null,
     measurements: null,
     condition: null,
@@ -87,7 +87,7 @@ export default function Admin() {
           <div className="admin-actions">
             <button type="button" className="primary" onClick={() => setEditing(blankProduct(all.length))}>Add shirt</button>
             {source === 'database' && all.length === 0 && (
-              <button type="button" className="secondary" onClick={() => run(importSeedProducts, 'Imported the 19 starter shirts. Now verify each one.')}>Import the 19 starter shirts</button>
+              <button type="button" className="secondary" onClick={() => run(importSeedProducts, 'Imported the starter shirts. Now verify each one.')}>Import the starter shirts</button>
             )}
             {source === 'demo' && <button type="button" className="secondary" onClick={() => { resetDemoData(); setMessage('Demo data reset.') }}>Reset demo data</button>}
             {source === 'database' && <button type="button" className="text-link" onClick={() => supabase?.auth.signOut()}>Sign out</button>}
@@ -116,7 +116,7 @@ export default function Admin() {
                   <tr key={p.id}>
                     <td>{p.sku}</td>
                     <td>{p.name}</td>
-                    <td>{formatKes(p.priceKes)}</td>
+                    <td className={p.priceKes === null ? 'tbc' : ''}>{p.priceKes === null ? 'unconfirmed' : priceLabel(p)}</td>
                     <td className={p.size ? '' : 'tbc'}>{p.size ?? 'unverified'}</td>
                     <td className={p.condition ? '' : 'tbc'}>{p.condition ?? 'unverified'}</td>
                     <td>{stockLabel(p)}</td>
@@ -195,7 +195,7 @@ function ProductForm({ initial, onSave, onCancel }: { initial: Product; onSave: 
         <label className="field">SKU<input value={p.sku} onChange={(e) => set('sku', e.target.value)} />{errors.sku && <span className="error">{errors.sku}</span>}</label>
         <label className="field">Name<input value={p.name} onChange={(e) => set('name', e.target.value)} />{errors.name && <span className="error">{errors.name}</span>}</label>
         <label className="field">Category<select value={p.category} onChange={(e) => set('category', e.target.value as Product['category'])}>{CATEGORIES.map((c) => <option key={c}>{c}</option>)}</select></label>
-        <label className="field">Price (KES)<input inputMode="numeric" value={p.priceKes || ''} onChange={(e) => set('priceKes', Number(e.target.value))} />{errors.priceKes && <span className="error">{errors.priceKes}</span>}</label>
+        <label className="field">Price (KES)<input inputMode="numeric" value={p.priceKes ?? ''} onChange={(e) => set('priceKes', e.target.value.trim() === '' ? null : Number(e.target.value))} placeholder="blank = to confirm" />{errors.priceKes && <span className="error">{errors.priceKes}</span>}</label>
         <label className="field">Verified size<input value={p.size ?? ''} onChange={(e) => set('size', e.target.value.trim() || null)} placeholder="e.g. M, L, 42" />{errors.size && <span className="error">{errors.size}</span>}</label>
         <label className="field">Condition<select value={p.condition ?? ''} onChange={(e) => set('condition', (e.target.value || null) as Product['condition'])}><option value="">Unverified</option>{CONDITIONS.map((c) => <option key={c}>{c}</option>)}</select></label>
         <label className="field">Stock quantity<input inputMode="numeric" value={p.quantity ?? ''} onChange={(e) => set('quantity', e.target.value.trim() === '' ? null : Number(e.target.value))} placeholder="blank = unverified" />{errors.quantity && <span className="error">{errors.quantity}</span>}</label>

@@ -92,6 +92,12 @@ export function cartCount(lines: CartLine[]): number {
   return lines.reduce((n, l) => n + l.qty, 0)
 }
 
+/** Number of bag lines whose price the shop has not confirmed yet. */
+export function unpricedCount(lines: CartLine[], products: Product[]): number {
+  return lines.filter((l) => products.find((p) => p.id === l.productId)?.priceKes == null).length
+}
+
+/** Sum of confirmed prices only; unpriced lines contribute 0 (callers must say so). */
 export function cartSubtotal(lines: CartLine[], products: Product[]): number {
   return lines.reduce((sum, l) => sum + (products.find((p) => p.id === l.productId)?.priceKes ?? 0) * l.qty, 0)
 }

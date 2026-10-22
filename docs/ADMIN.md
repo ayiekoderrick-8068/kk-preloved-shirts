@@ -21,7 +21,7 @@
 ## Day-to-day workflow
 
 1. Go to `/admin` and sign in.
-2. First time only: **Import the 19 starter shirts** (seeds names, prices and photos; everything else stays unverified).
+2. First time only: **Import the starter shirts** (seeds names and photos; price and everything else stays unverified). Photo files must be deployed with the site (`public/assets/products/`) or replaced by uploaded images.
 3. For each shirt, physically check it, then **Edit** and fill in: verified size, condition, measurements (cm, laid flat), flaws (or tick "no flaws found"), stock quantity (usually 1), and the final name/price.
 4. **Mark sold** only after the shop has actually confirmed an order. **Archive** hides a shirt from the storefront without deleting it; **Restore** brings it back.
 5. **Add shirt** creates a new product. Upload real photos of that exact item (JPEG/PNG/WebP, max 5 MB) or paste an image URL.

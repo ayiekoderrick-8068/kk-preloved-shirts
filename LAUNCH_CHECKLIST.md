@@ -17,9 +17,13 @@ Supplied by the owner and already in the site (please re-check): WhatsApp/call 0
 - [ ] Final domain → `VITE_SITE_URL` (canonical URLs, Open Graph, sitemap)
 - [ ] Other payment methods, if any (the site deliberately does not take payment; Pochi la Biashara is shown for the booking fee)
 
-## Per-shirt data (19 seed items, KK-01 … KK-19)
+## Per-shirt data (36 seed items, KK-01 … KK-36)
 
-For every shirt: exact size, measurements, condition, flaws, stock count (usually 1), final price and true product name. Until verified they show "Details to confirm". Names and prices are carried over from the prototype and are **unverified**; prototype badges such as "Bestseller" were dropped as unsubstantiated.
+Built from the shop's own photos (`public/assets/products/`). For every shirt the shop must supply: **price**, exact size, measurements, condition, flaws, stock count (usually 1) and the true product name. Until verified they show "Price to confirm" / "Details to confirm". Names are plain descriptions of what the photo shows, not verified product names. Prototype prices and badges ("Bestseller") were dropped as unsubstantiated.
+
+- [ ] **Check the photo grouping.** Photos were grouped per shirt by eye from contact sheets, so a product may contain a photo of a different shirt or miss one. Fix in `/admin` (Photos) or in `src/data/seed.ts`.
+- [ ] 27 photos (indoor set: #4–9, 12–15, 35–38, 43–52, 55–56, 66, 70) show cream/sage/striped shirts that could not be told apart reliably and were **not added**. Tell me which shirts they are (or which photos belong together) and they can be added.
+- [ ] The original 19 cut-out images are kept in `public/assets/shirt-NN.webp` but are no longer used.
 
 ## Backend (needed before real multi-user inventory)
 

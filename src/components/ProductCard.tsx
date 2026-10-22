@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { formatKes, stockState } from '../lib/inventory'
+import { priceLabel, stockState } from '../lib/inventory'
 import type { Product } from '../types'
 import ProductImage from './ProductImage'
 import StockBadge from './StockBadge'
@@ -13,7 +13,7 @@ export default function ProductCard({ product: p, onQuickView }: Props) {
   const sold = stockState(p) === 'sold'
   return (
     <article className={`product${sold ? ' is-sold' : ''}`}>
-      <Link to={`/shop/${p.id}`} className="product-visual" aria-label={`${p.name}, ${formatKes(p.priceKes)}`}>
+      <Link to={`/shop/${p.id}`} className="product-visual" aria-label={`${p.name}, ${priceLabel(p)}`}>
         {sold && <span className="tag">Sold</span>}
         <ProductImage src={p.images[0]} alt="" loading="lazy" />
       </Link>
@@ -27,7 +27,7 @@ export default function ProductCard({ product: p, onQuickView }: Props) {
           </div>
           <StockBadge product={p} />
         </div>
-        <span className="price">{formatKes(p.priceKes)}</span>
+        <span className={`price${p.priceKes === null ? ' tbc' : ''}`}>{priceLabel(p)}</span>
       </div>
       <button type="button" className="quick-btn" onClick={() => onQuickView(p)}>
         Quick view

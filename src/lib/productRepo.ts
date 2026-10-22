@@ -10,7 +10,7 @@ interface Row {
   name: string
   category: Product['category']
   description: string
-  price_kes: number
+  price_kes: number | null
   size: string | null
   measurements: Product['measurements']
   condition: Product['condition']

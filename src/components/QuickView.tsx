@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { formatKes } from '../lib/inventory'
+import { priceLabel } from '../lib/inventory'
 import type { Product } from '../types'
 import AddToBagButton from './AddToBagButton'
 import Modal from './Modal'
@@ -25,8 +25,8 @@ export default function QuickView({ product: p, onClose }: Props) {
           <div className="detail-info">
             <div className="eyebrow">{p.category}</div>
             <h2>{p.name}</h2>
-            <div className="price big">{formatKes(p.priceKes)}</div>
-            <p>{p.description}</p>
+            <div className={`price big${p.priceKes === null ? ' tbc' : ''}`}>{priceLabel(p)}</div>
+            {p.description && <p>{p.description}</p>}
             <ProductSpecs product={p} />
             <AddToBagButton product={p} />
             <Link to={`/shop/${p.id}`} className="text-link" onClick={onClose}>

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useProducts } from '../context/ProductsContext'
 import { config, hasWhatsApp } from '../lib/config'
-import { formatKes, maxQuantity } from '../lib/inventory'
+import { unpricedCount } from '../lib/cart'
+import { formatKes, maxQuantity, priceLabel } from '../lib/inventory'
 import { buildOrderMessage, buildWhatsAppUrl, validateCustomer, type CustomerErrors } from '../lib/order'
 import type { CustomerDetails } from '../types'
 import Modal from './Modal'
@@ -112,7 +113,7 @@ export default function CartDrawer() {
                     Remove
                   </button>
                 </div>
-                <span className="price">{formatKes(p.priceKes * l.qty)}</span>
+                <span className="price">{priceLabel(p, l.qty)}</span>
               </div>
             )
           })
@@ -125,6 +126,11 @@ export default function CartDrawer() {
             <span>Items subtotal</span>
             <span>{formatKes(subtotal)}</span>
           </div>
+          {unpricedCount(lines, all) > 0 && (
+            <p className="note">
+              {unpricedCount(lines, all)} item(s) in your bag have a price still to be confirmed by the shop, so this subtotal covers priced items only.
+            </p>
+          )}
           <p className="note">
             Booking fee: {formatKes(config.bookingFeeKes)} per item, paid via Pochi la Biashara {config.pochiNumber} after the shop confirms availability.
             Delivery fee to be confirmed by the shop. Nothing is charged on this website.

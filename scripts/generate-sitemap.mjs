@@ -1,4 +1,4 @@
-// Writes public/sitemap.xml and points robots.txt at it, using VITE_SITE_URL (env var or .env.local).
+﻿// Writes public/sitemap.xml and points robots.txt at it, using VITE_SITE_URL (env var or .env.local).
 // Runs automatically before `npm run build`. Without a site URL it removes the sitemap rather than publish wrong links.
 import { existsSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 
@@ -22,9 +22,10 @@ if (!site) {
 } else {
   const paths = ['/', '/shop', '/about', '/contact', '/delivery-returns', '/faq']
   // Seed product pages. Products added later in the database are not listed here (see README).
-  for (let i = 1; i <= 19; i++) paths.push(`/shop/kk-${String(i).padStart(2, '0')}`)
+  for (let i = 1; i <= 36; i++) paths.push(`/shop/kk-${String(i).padStart(2, '0')}`)
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${paths.map((p) => `  <url><loc>${site}${p}</loc></url>`).join('\n')}\n</urlset>\n`
   writeFileSync('public/sitemap.xml', xml)
   writeFileSync('public/robots.txt', robots(`\nSitemap: ${site}/sitemap.xml\n`))
   console.log(`[sitemap] wrote ${paths.length} URLs for ${site}`)
 }
+

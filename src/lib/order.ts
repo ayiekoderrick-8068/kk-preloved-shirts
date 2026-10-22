@@ -1,6 +1,6 @@
 import type { CartLine, CustomerDetails, Product } from '../types'
-import { cartSubtotal } from './cart'
-import { formatKes, stockState } from './inventory'
+import { cartSubtotal, unpricedCount } from './cart'
+import { formatKes, priceLabel, stockState } from './inventory'
 
 export interface PhoneResult {
   valid: boolean
@@ -52,7 +52,7 @@ export function buildOrderMessage(lines: CartLine[], products: Product[], c: Cus
     if (!p) return []
     const stock = stockState(p) === 'in_stock' ? '' : ' (size/availability to confirm)'
     const size = p.size ? `Size ${p.size}` : 'Size to confirm'
-    return [`${i + 1}. ${p.name} [${p.sku}] - ${size} - Qty ${l.qty} - ${formatKes(p.priceKes * l.qty)}${stock}`]
+    return [`${i + 1}. ${p.name} [${p.sku}] - ${size} - Qty ${l.qty} - ${priceLabel(p, l.qty)}${stock}`]
   })
   const notes = c.notes.trim()
   return [
@@ -60,7 +60,9 @@ export function buildOrderMessage(lines: CartLine[], products: Product[], c: Cus
     '',
     ...items,
     '',
-    `Items subtotal: ${formatKes(cartSubtotal(lines, products))}`,
+    unpricedCount(lines, products) === 0
+      ? `Items subtotal: ${formatKes(cartSubtotal(lines, products))}`
+      : `Items subtotal: ${formatKes(cartSubtotal(lines, products))} for priced items, plus ${unpricedCount(lines, products)} item(s) with price to confirm`,
     c.fulfillment === 'Delivery' ? 'Delivery fee: to confirm' : 'Pickup: no delivery fee',
     '',
     `Name: ${c.fullName.trim()}`,
