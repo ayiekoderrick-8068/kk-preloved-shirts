@@ -216,12 +216,29 @@ for (const width of [320, 375, 768, 1024, 1440]) {
 test('bag counter updates when products are added and removed', async ({ page }) => {
   await page.goto('/shop/kk-01')
   const count = page.locator('.bag-btn .bag-count')
-  await expect(count).toHaveText('0')
+  const bagButton = page.locator('.bag-btn')
+  // Empty bag: icon only, no badge.
+  await expect(count).toHaveCount(0)
+  await expect(bagButton).toHaveAccessibleName('Open bag, empty')
   await page.getByRole('button', { name: /Add to bag/ }).click()
   await expect(count).toHaveText('1')
+  await expect(bagButton).toHaveAccessibleName('Open bag, 1 item')
+  await expect(page.locator('.bag-art.bump')).toHaveCount(1) // add animation played
+  const badge = await count.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(badge).toBe('rgb(162, 77, 53)') // terracotta
+  const size = await page.locator('.bag-svg').boundingBox()
+  expect(size!.width).toBeGreaterThanOrEqual(28)
+  expect(size!.width).toBeLessThanOrEqual(32)
   await page.locator('.toast').getByRole('button', { name: 'View bag' }).click()
   await page.getByRole('dialog', { name: 'Shopping bag' }).getByRole('button', { name: 'Remove' }).click()
-  await expect(count).toHaveText('0')
+  await expect(count).toHaveCount(0)
+})
+
+test('bag icon is keyboard accessible and opens the bag', async ({ page }) => {
+  await page.goto('/shop')
+  await page.locator('.bag-btn').focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('dialog', { name: 'Shopping bag' })).toBeVisible()
 })
 
 test('product cards: "Check availability" opens a WhatsApp chat about that exact shirt', async ({ page, context }) => {

@@ -13,6 +13,8 @@ interface CartValue {
   savings: number
   /** Standard-priced shirts in the bag (those eligible for the pair deal). */
   standardCount: number
+  /** Increments each time a shirt is successfully added; used to replay the header bag animation. */
+  addPulse: number
   isOpen: boolean
   openCart: () => void
   closeCart: () => void
@@ -38,6 +40,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const notify = useToast()
   const [lines, setLines] = useState<CartLine[]>(readStored)
   const [isOpen, setOpen] = useState(false)
+  const [addPulse, setAddPulse] = useState(0)
 
   useEffect(() => {
     try {
@@ -66,6 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return false
       }
       setLines(r.lines)
+      setAddPulse((n) => n + 1)
       return true
     },
     [lines, notify],
@@ -85,6 +89,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       lines,
       count: cartCount(lines),
       ...(({ subtotal, savings, standardCount }) => ({ subtotal, savings, standardCount }))(cartTotals(lines, all)),
+      addPulse,
       isOpen,
       openCart: () => setOpen(true),
       closeCart: () => setOpen(false),
@@ -94,7 +99,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clear: () => setLines([]),
       inBag: (id) => lines.some((l) => l.productId === id),
     }),
-    [lines, all, isOpen, add, setQty],
+    [lines, all, isOpen, addPulse, add, setQty],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
