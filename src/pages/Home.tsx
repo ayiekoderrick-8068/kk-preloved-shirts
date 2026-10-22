@@ -4,16 +4,17 @@ import ProductCard from '../components/ProductCard'
 import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
+import { pickHomepage } from '../lib/home'
 import { stockState } from '../lib/inventory'
 import { pairDealText } from '../lib/pricing'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Product } from '../types'
 
 export default function Home() {
   const { live, loading, error } = useProducts()
   const [quick, setQuick] = useState<Product | null>(null)
   const rail = live.filter((p) => stockState(p) !== 'sold')
-  const featured = rail.filter((p) => p.featured).slice(0, 4)
+  const { featured, collage } = useMemo(() => pickHomepage(live), [live])
 
   return (
     <>
@@ -68,9 +69,9 @@ export default function Home() {
           <p>Each shirt is a unique piece. Sizes, measurements and condition are listed per item so you know exactly what you are getting.</p>
           <Link to="/shop" className="secondary">Browse the shop ↗</Link>
         </div>
-        <div className="editorial-visual">
-          {live.slice(2, 4).map((p) => (
-            <img key={p.id} src={p.images[0]} alt={p.name} loading="lazy" />
+        <div className="editorial-visual collage">
+          {collage.map((p, i) => (
+            <img key={p.id} className={`collage-${i + 1}`} src={p.images[0]} alt={p.name} loading="lazy" />
           ))}
         </div>
       </section>

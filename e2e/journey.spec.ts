@@ -123,6 +123,47 @@ for (const vp of [
   })
 }
 
+for (const width of [375, 768, 1024, 1440]) {
+  test(`home page: no repeated shirts and a clean collage at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/')
+    await expect(page.locator('.spotlight .product')).toHaveCount(4)
+
+    const spotlight = await page.locator('.spotlight .product-name').allTextContents()
+    const collage = await page.locator('.collage img').evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).alt))
+    expect(collage).toEqual(['Beige Half-Zip Shirt', 'Dusty Pink Short-Sleeve Shirt', 'White Textured Short-Sleeve Shirt'])
+    expect(new Set([...spotlight, ...collage]).size).toBe(spotlight.length + collage.length)
+
+    await page.locator('.editorial').scrollIntoViewIfNeeded()
+    const info = await page.evaluate(() => {
+      const wrap = document.querySelector('.collage')!.getBoundingClientRect()
+      const imgs = [...document.querySelectorAll<HTMLElement>('.collage img')]
+      const inside = imgs.every((i) => {
+        const r = i.getBoundingClientRect()
+        return r.left >= wrap.left - 20 && r.right <= wrap.right + 20 && r.top >= wrap.top - 20 && r.bottom <= wrap.bottom + 20
+      })
+      const front = imgs[2].getBoundingClientRect()
+      const topAtCenter = document.elementFromPoint(front.left + front.width / 2, front.top + front.height / 2)
+      return { inside, whiteInFront: topAtCenter === imgs[2] }
+    })
+    expect(info.inside).toBe(true)
+    expect(info.whiteInFront).toBe(true)
+
+    // Spotlight cards line up: same photo height and same Quick view baseline within each row.
+    const rows = await page.locator('.spotlight .product').evaluateAll((cards) =>
+      cards.map((c) => ({
+        photo: Math.round(c.querySelector('.product-visual')!.getBoundingClientRect().height),
+        quickTop: Math.round(c.querySelector('.quick-btn')!.getBoundingClientRect().top - c.getBoundingClientRect().top),
+        rowTop: Math.round(c.getBoundingClientRect().top),
+      })),
+    )
+    expect(new Set(rows.map((r) => r.photo)).size).toBe(1)
+    for (const top of new Set(rows.map((r) => r.rowTop))) {
+      expect(new Set(rows.filter((r) => r.rowTop === top).map((r) => r.quickTop)).size).toBe(1)
+    }
+  })
+}
+
 test('mobile menu opens and links work', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 700 })
   await page.goto('/')

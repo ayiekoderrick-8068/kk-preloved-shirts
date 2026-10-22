@@ -20,15 +20,17 @@ type Row = [name: string, category: Category, photos: number[], featured?: boole
 const S: Category = 'Short sleeve'
 const L: Category = 'Long sleeve'
 
+// A trailing `true` marks a shirt for the home-page spotlight: the most colourful, best-lit shots.
+// The collage shirts (see lib/home.ts) must not also be flagged.
 const ROWS: Row[] = [
   ['Butterfly Print Camp Shirt', S, [80, 81, 131, 132], true],
-  ['Cream Camp Shirt with Coconut Buttons', S, [78, 79, 152, 153], true],
-  ['White Palm-Print Camp Shirt', S, [92, 93, 135, 136], true],
+  ['Cream Camp Shirt with Coconut Buttons', S, [78, 79, 152, 153]],
+  ['White Palm-Print Camp Shirt', S, [92, 93, 135, 136]],
   ['Blue Hibiscus Print Shirt', S, [96, 97, 137, 138], true],
   ['Dusty Pink Short-Sleeve Shirt', S, [94, 95, 139, 140]],
   ['Grey Hooded Short-Sleeve Shirt', S, [109, 110, 143, 144]],
-  ['Rust Orange Two-Pocket Shirt', S, [89, 90]],
-  ['Teal Blue Two-Pocket Shirt', S, [103, 104, 141, 142]],
+  ['Rust Orange Two-Pocket Shirt', S, [89, 90], true],
+  ['Teal Blue Two-Pocket Shirt', S, [103, 104, 141, 142], true],
   ['Blue i9 Sports Camp Shirt', S, [98, 125]],
   ['White and Black Panel Camp Shirt', S, [105, 106, 41]],
   ['Silver Pinstripe Camp Shirt', S, [113, 114, 123]],
