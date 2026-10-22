@@ -27,7 +27,7 @@ export default function ProductCard({ product: p, onQuickView }: Props) {
           </div>
           <StockBadge product={p} />
         </div>
-        <span className={`price${p.priceKes === null ? ' tbc' : ''}`}>{priceLabel(p)}</span>
+        <span className="price">{priceLabel(p)}</span>
       </div>
       <button type="button" className="quick-btn" onClick={() => onQuickView(p)}>
         Quick view

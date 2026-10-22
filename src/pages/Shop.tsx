@@ -3,6 +3,7 @@ import ProductCard from '../components/ProductCard'
 import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
+import { pairDealText } from '../lib/pricing'
 import { DEFAULT_FILTERS, filterProducts, sortProducts, verifiedOptions, type Availability, type ProductFilters, type SortKey } from '../lib/inventory'
 import { CATEGORIES } from '../lib/validate'
 import type { Product } from '../types'
@@ -27,7 +28,9 @@ export default function Shop() {
           <p className="eyebrow">The complete lineup</p>
           <h1>Shop all<span className="dot">.</span></h1>
         </div>
-        <p>Each piece is one-off. Where a size or condition is not yet confirmed we say so rather than guess.</p>
+        <p>
+          <strong>{pairDealText()}.</strong> Each piece is one-off. Where a size or condition is not yet confirmed we say so rather than guess.
+        </p>
       </div>
 
       <form className="toolbar" role="search" aria-label="Filter shirts" onSubmit={(e) => e.preventDefault()}>

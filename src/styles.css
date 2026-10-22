@@ -92,9 +92,8 @@ main:focus{outline:none}
 .product-name:hover{color:var(--accent)}
 .product-kind{font-size:12px;color:var(--sub);margin:4px 0 6px}
 .price{font-size:13px;font-weight:700;white-space:nowrap}
-.price.tbc{white-space:normal;font-size:12px;font-weight:600}
 .product-meta>div{min-width:0}
-.price.big.tbc{font-size:20px}
+.detail-info p.deal{font-size:13px;font-weight:700;color:var(--accent);margin:0 0 10px}
 .price.big{font-size:24px;margin:6px 0 10px}
 .quick-btn{margin:8px 2px 0;background:none;border:0;padding:10px 0;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:underline;min-height:44px}
 .stock{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px}

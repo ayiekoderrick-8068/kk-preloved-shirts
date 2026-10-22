@@ -26,7 +26,7 @@ Playwright needs Chromium: `npx playwright install chromium` (plus system librar
 
 ## How inventory works
 
-- **Without Supabase (default, "demo mode")**: the 36 seed products in `src/data/seed.ts` are shown, each with price "to confirm". Price, size, measurements, condition, flaws and quantity are `null`, so the UI shows "Details to confirm" and "Confirm availability". Admin edits at `/admin` are stored only in that browser's localStorage and are **not** visible to customers.
+- **Without Supabase (default, "demo mode")**: the 36 seed products in `src/data/seed.ts` are shown, each at the standard price (KES 350, any 2 for KES 600). Size, measurements, condition, flaws and quantity are `null`, so the UI shows "Details to confirm" and "Confirm availability". Admin edits at `/admin` are stored only in that browser's localStorage and are **not** visible to customers.
 - **With Supabase**: products live in a database, writes are restricted to signed-in admins by Row Level Security, and photos go to a storage bucket. See [docs/ADMIN.md](docs/ADMIN.md).
 
 Stock rules: sold or zero-stock items cannot be added to the bag; unverified stock is treated as a single unit; a one-off cannot be added twice; carts are reconciled against live inventory (stale/sold lines are removed with a notice). Opening WhatsApp never marks anything sold - only an admin does.

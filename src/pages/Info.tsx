@@ -1,6 +1,7 @@
 import Seo from '../components/Seo'
 import { config, localDisplay } from '../lib/config'
 import { formatKes } from '../lib/inventory'
+import { DEFAULT_RULE, pairDealText } from '../lib/pricing'
 
 const TBC = 'To be announced by the shop.'
 const fee = formatKes(config.bookingFeeKes)
@@ -85,6 +86,7 @@ export function Faq() {
     ['Is every shirt one of a kind?', 'Yes, unless a listing shows more than one available. A one-off piece can only be bought once.'],
     ['Why does a shirt say "Details to confirm"?', 'The size, condition or stock has not been checked yet. We would rather say so than guess.'],
     ['How do I order?', `Add shirts to your bag, enter your details and send the request on WhatsApp. The shop replies to confirm availability, the final total and delivery. You can also call or WhatsApp ${localDisplay(config.whatsappNumber)} or ${localDisplay(config.secondaryPhone)}.`],
+    ['How much do the shirts cost?', `${pairDealText()}. With more shirts, each full pair is KES ${DEFAULT_RULE.pair} and a leftover single is KES ${DEFAULT_RULE.unit}. The shop confirms the final total, plus any delivery fee, when it replies.`],
     ['How does booking work?', `Booking is ${fee} per item, paid via Pochi la Biashara ${config.pochiNumber} after the shop confirms the shirt is available.`],
     ['Do I pay on the website?', 'No. The website takes no payment. Payment is arranged directly with the shop once it confirms your order.'],
     ['Is my order confirmed when I press send?', 'No. It is only a request until the shop confirms it.'],

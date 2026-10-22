@@ -1,5 +1,6 @@
 import type { CartLine, Product } from '../types'
 import { maxQuantity } from './inventory'
+import { cartTotals } from './pricing'
 
 /** Bump the version suffix whenever the stored shape changes; old carts are then ignored. */
 export const CART_STORAGE_KEY = 'kk-preloved-shirts:cart:v1'
@@ -92,12 +93,5 @@ export function cartCount(lines: CartLine[]): number {
   return lines.reduce((n, l) => n + l.qty, 0)
 }
 
-/** Number of bag lines whose price the shop has not confirmed yet. */
-export function unpricedCount(lines: CartLine[], products: Product[]): number {
-  return lines.filter((l) => products.find((p) => p.id === l.productId)?.priceKes == null).length
-}
-
-/** Sum of confirmed prices only; unpriced lines contribute 0 (callers must say so). */
-export function cartSubtotal(lines: CartLine[], products: Product[]): number {
-  return lines.reduce((sum, l) => sum + (products.find((p) => p.id === l.productId)?.priceKes ?? 0) * l.qty, 0)
-}
+/** Items total including the pair deal (see pricing.ts). */
+export const cartSubtotal = (lines: CartLine[], products: Product[]): number => cartTotals(lines, products).subtotal

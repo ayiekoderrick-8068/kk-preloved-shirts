@@ -1,10 +1,10 @@
 import type { Category, Product, StockState } from '../types'
+import { singlePrice } from './pricing'
 
 export const formatKes = (n: number): string => 'KES ' + Math.round(n).toLocaleString('en-KE')
 
-/** Customer-facing price text; never a made-up number. */
-export const priceLabel = (p: Pick<Product, 'priceKes'>, qty = 1): string =>
-  p.priceKes === null ? 'Price to confirm' : formatKes(p.priceKes * qty)
+/** Single-shirt price as shown to customers (the shop's standard price unless the product has its own). */
+export const priceLabel = (p: Pick<Product, 'priceKes'>, qty = 1): string => formatKes(singlePrice(p) * qty)
 
 export function stockState(p: Product): StockState {
   if (p.status === 'sold' || p.quantity === 0) return 'sold'
@@ -71,11 +71,10 @@ export function filterProducts(products: Product[], f: ProductFilters): Product[
 export function sortProducts(products: Product[], sort: SortKey): Product[] {
   const list = [...products]
   switch (sort) {
-    // Unpriced items always sort last so a missing price never reads as "cheapest".
     case 'price-asc':
-      return list.sort((a, b) => (a.priceKes ?? Infinity) - (b.priceKes ?? Infinity) || 0)
+      return list.sort((a, b) => singlePrice(a) - singlePrice(b))
     case 'price-desc':
-      return list.sort((a, b) => (b.priceKes ?? -Infinity) - (a.priceKes ?? -Infinity) || 0)
+      return list.sort((a, b) => singlePrice(b) - singlePrice(a))
     case 'name':
       return list.sort((a, b) => a.name.localeCompare(b.name))
     default:

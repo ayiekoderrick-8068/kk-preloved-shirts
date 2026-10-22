@@ -12,7 +12,7 @@ export function validateProduct(p: Product): ProductErrors {
   if (!/^[A-Za-z0-9-]{2,24}$/.test(p.sku)) e.sku = 'SKU must be 2-24 letters, numbers or dashes.'
   if (p.name.trim().length < 2 || p.name.length > 120) e.name = 'Name must be 2-120 characters.'
   if (!CATEGORIES.includes(p.category)) e.category = 'Choose a category.'
-  if (p.priceKes !== null && (!Number.isInteger(p.priceKes) || p.priceKes <= 0 || p.priceKes > 1_000_000)) e.priceKes = 'Enter a whole-number price in KES, or leave blank until confirmed.'
+  if (p.priceKes !== null && (!Number.isInteger(p.priceKes) || p.priceKes <= 0 || p.priceKes > 1_000_000)) e.priceKes = 'Enter a whole-number price in KES, or leave blank for the standard shop price.'
   if (p.quantity !== null && (!Number.isInteger(p.quantity) || p.quantity < 0 || p.quantity > 999)) e.quantity = 'Quantity must be a whole number, or blank if unverified.'
   if (p.size !== null && p.size.length > 16) e.size = 'Size is too long.'
   if (p.condition !== null && !CONDITIONS.includes(p.condition)) e.condition = 'Choose a valid condition.'

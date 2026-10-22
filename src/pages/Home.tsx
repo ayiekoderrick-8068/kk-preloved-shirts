@@ -5,6 +5,7 @@ import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
 import { stockState } from '../lib/inventory'
+import { pairDealText } from '../lib/pricing'
 import { useState } from 'react'
 import type { Product } from '../types'
 
@@ -37,7 +38,7 @@ export default function Home() {
 
       <section className="feature-strip" aria-label="How ordering works">
         <div className="section feature-grid">
-          <div className="feature"><span aria-hidden="true">1</span> Pick your pieces</div>
+          <div className="feature"><span aria-hidden="true">1</span> Pick your pieces: {pairDealText()}</div>
           <div className="feature"><span aria-hidden="true">2</span> Send your request on WhatsApp</div>
           <div className="feature"><span aria-hidden="true">3</span> The shop confirms size, availability and delivery</div>
         </div>

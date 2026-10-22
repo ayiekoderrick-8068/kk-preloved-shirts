@@ -10,6 +10,7 @@ import StockBadge from '../components/StockBadge'
 import { useProducts } from '../context/ProductsContext'
 import { config } from '../lib/config'
 import { formatKes, priceLabel, relatedProducts } from '../lib/inventory'
+import { pairDealText } from '../lib/pricing'
 import type { Product } from '../types'
 import NotFound from './NotFound'
 
@@ -28,7 +29,7 @@ export default function ProductPage() {
 
   return (
     <>
-      <Seo title={p.name} description={`${p.name} - pre-loved ${p.category.toLowerCase()} men's shirt, ${priceLabel(p).toLowerCase() === 'price to confirm' ? 'price on request' : priceLabel(p)}. ${p.description}`.trim()} path={`/shop/${p.id}`} image={p.images[0]} />
+      <Seo title={p.name} description={`${p.name} - pre-loved ${p.category.toLowerCase()} men's shirt, ${priceLabel(p)}. ${p.description}`.trim()} path={`/shop/${p.id}`} image={p.images[0]} />
       <article className="section product-page">
         <nav aria-label="Breadcrumb" className="crumbs">
           <Link to="/">Home</Link> / <Link to="/shop">Shop</Link> / <span aria-current="page">{p.name}</span>
@@ -49,7 +50,8 @@ export default function ProductPage() {
           <div className="detail-info">
             <p className="eyebrow">{p.category}</p>
             <h1>{p.name}</h1>
-            <div className={`price big${p.priceKes === null ? ' tbc' : ''}`}>{priceLabel(p)}</div>
+            <div className="price big">{priceLabel(p)}</div>
+            {p.priceKes === null && <p className="deal">{pairDealText()}</p>}
             <StockBadge product={p} />
             {p.description && <p>{p.description}</p>}
             <ProductSpecs product={p} />

@@ -8,7 +8,7 @@ create table if not exists public.products (
   name         text not null check (char_length(name) between 2 and 120),
   category     text not null check (category in ('Short sleeve', 'Long sleeve')),
   description  text not null default '' check (char_length(description) <= 1000),
-  price_kes    integer check (price_kes is null or (price_kes > 0 and price_kes <= 1000000)), -- null = price to confirm
+  price_kes    integer check (price_kes is null or (price_kes > 0 and price_kes <= 1000000)), -- null = standard shop price (KES 350, 2 for KES 600)
   size         text check (size is null or char_length(size) <= 16),
   measurements jsonb,
   condition    text check (condition is null or condition in ('Like new', 'Very good', 'Good', 'Fair')),

@@ -1,4 +1,4 @@
-﻿import { expect, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test('customer journey: browse, add to bag, validate, prepare order request', async ({ page, context }) => {
   // Never hit real WhatsApp from tests; capture the link the app opens.
@@ -33,7 +33,8 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
   await page.getByRole('button', { name: /Add to bag/ }).click()
   const bag = page.getByRole('dialog', { name: 'Shopping bag' })
   await expect(bag.getByText('One-off piece')).toBeVisible()
-  await expect(bag.getByText('Price to confirm').first()).toBeVisible()
+  await expect(bag.getByText('KES 350').first()).toBeVisible()
+  await expect(bag.getByText(/any 2 shirts cost KES 600/i)).toBeVisible()
 
   // Checkout validation.
   await bag.getByRole('button', { name: 'Continue to order details' }).click()

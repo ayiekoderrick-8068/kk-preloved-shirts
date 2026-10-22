@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useProducts } from '../context/ProductsContext'
 import { config, hasWhatsApp } from '../lib/config'
-import { unpricedCount } from '../lib/cart'
 import { formatKes, maxQuantity, priceLabel } from '../lib/inventory'
+import { DEFAULT_RULE } from '../lib/pricing'
 import { buildOrderMessage, buildWhatsAppUrl, validateCustomer, type CustomerErrors } from '../lib/order'
 import type { CustomerDetails } from '../types'
 import Modal from './Modal'
@@ -13,7 +13,7 @@ import ProductImage from './ProductImage'
 const EMPTY: CustomerDetails = { fullName: '', phone: '', fulfillment: 'Delivery', location: '', notes: '', consent: false }
 
 export default function CartDrawer() {
-  const { lines, subtotal, isOpen, closeCart, setQty, remove, clear } = useCart()
+  const { lines, subtotal, savings, standardCount, isOpen, closeCart, setQty, remove, clear } = useCart()
   const { all } = useProducts()
   const [checkout, setCheckout] = useState(false)
   const [form, setForm] = useState<CustomerDetails>(EMPTY)
@@ -126,9 +126,10 @@ export default function CartDrawer() {
             <span>Items subtotal</span>
             <span>{formatKes(subtotal)}</span>
           </div>
-          {unpricedCount(lines, all) > 0 && (
+          {savings > 0 && <p className="success">Pair deal applied: you save {formatKes(savings)}.</p>}
+          {standardCount % 2 === 1 && (
             <p className="note">
-              {unpricedCount(lines, all)} item(s) in your bag have a price still to be confirmed by the shop, so this subtotal covers priced items only.
+              Tip: any 2 shirts cost {formatKes(DEFAULT_RULE.pair)} (single shirt {formatKes(DEFAULT_RULE.unit)}). Add one more to save {formatKes(DEFAULT_RULE.unit * 2 - DEFAULT_RULE.pair)}.
             </p>
           )}
           <p className="note">

@@ -47,10 +47,10 @@ describe('filter and sort', () => {
     make({ id: 'b', name: 'Beta', priceKes: 1000, size: 'L', condition: 'Like new', status: 'sold' }),
     make({ id: 'c', name: 'Gamma', priceKes: 1500, size: null, condition: null }),
   ]
-  it('sorts unpriced items last in both price directions', () => {
-    const withNull = [...products, make({ id: 'n', name: 'Nope', priceKes: null })]
-    expect(sortProducts(withNull, 'price-asc').map((p) => p.id)).toEqual(['b', 'c', 'a', 'n'])
-    expect(sortProducts(withNull, 'price-desc').map((p) => p.id)).toEqual(['a', 'c', 'b', 'n'])
+  it('sorts standard-priced items at the standard price', () => {
+    const withStd = [...products, make({ id: 'n', name: 'Nope', priceKes: null })]
+    expect(sortProducts(withStd, 'price-asc').map((p) => p.id)).toEqual(['n', 'b', 'c', 'a'])
+    expect(sortProducts(withStd, 'price-desc').map((p) => p.id)).toEqual(['a', 'c', 'b', 'n'])
   })
   it('searches by name', () => {
     expect(filterProducts(products, { ...DEFAULT_FILTERS, query: 'gam' }).map((p) => p.id)).toEqual(['c'])

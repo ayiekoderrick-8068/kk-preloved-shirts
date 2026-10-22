@@ -116,7 +116,7 @@ export default function Admin() {
                   <tr key={p.id}>
                     <td>{p.sku}</td>
                     <td>{p.name}</td>
-                    <td className={p.priceKes === null ? 'tbc' : ''}>{p.priceKes === null ? 'unconfirmed' : priceLabel(p)}</td>
+                    <td>{priceLabel(p)}{p.priceKes === null ? ' (standard)' : ''}</td>
                     <td className={p.size ? '' : 'tbc'}>{p.size ?? 'unverified'}</td>
                     <td className={p.condition ? '' : 'tbc'}>{p.condition ?? 'unverified'}</td>
                     <td>{stockLabel(p)}</td>
@@ -195,7 +195,7 @@ function ProductForm({ initial, onSave, onCancel }: { initial: Product; onSave: 
         <label className="field">SKU<input value={p.sku} onChange={(e) => set('sku', e.target.value)} />{errors.sku && <span className="error">{errors.sku}</span>}</label>
         <label className="field">Name<input value={p.name} onChange={(e) => set('name', e.target.value)} />{errors.name && <span className="error">{errors.name}</span>}</label>
         <label className="field">Category<select value={p.category} onChange={(e) => set('category', e.target.value as Product['category'])}>{CATEGORIES.map((c) => <option key={c}>{c}</option>)}</select></label>
-        <label className="field">Price (KES)<input inputMode="numeric" value={p.priceKes ?? ''} onChange={(e) => set('priceKes', e.target.value.trim() === '' ? null : Number(e.target.value))} placeholder="blank = to confirm" />{errors.priceKes && <span className="error">{errors.priceKes}</span>}</label>
+        <label className="field">Price (KES)<input inputMode="numeric" value={p.priceKes ?? ''} onChange={(e) => set('priceKes', e.target.value.trim() === '' ? null : Number(e.target.value))} placeholder="blank = standard KES 350" />{errors.priceKes && <span className="error">{errors.priceKes}</span>}</label>
         <label className="field">Verified size<input value={p.size ?? ''} onChange={(e) => set('size', e.target.value.trim() || null)} placeholder="e.g. M, L, 42" />{errors.size && <span className="error">{errors.size}</span>}</label>
         <label className="field">Condition<select value={p.condition ?? ''} onChange={(e) => set('condition', (e.target.value || null) as Product['condition'])}><option value="">Unverified</option>{CONDITIONS.map((c) => <option key={c}>{c}</option>)}</select></label>
         <label className="field">Stock quantity<input inputMode="numeric" value={p.quantity ?? ''} onChange={(e) => set('quantity', e.target.value.trim() === '' ? null : Number(e.target.value))} placeholder="blank = unverified" />{errors.quantity && <span className="error">{errors.quantity}</span>}</label>

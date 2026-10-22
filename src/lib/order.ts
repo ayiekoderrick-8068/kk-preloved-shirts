@@ -1,6 +1,6 @@
 import type { CartLine, CustomerDetails, Product } from '../types'
-import { cartSubtotal, unpricedCount } from './cart'
 import { formatKes, priceLabel, stockState } from './inventory'
+import { cartTotals } from './pricing'
 
 export interface PhoneResult {
   valid: boolean
@@ -55,14 +55,13 @@ export function buildOrderMessage(lines: CartLine[], products: Product[], c: Cus
     return [`${i + 1}. ${p.name} [${p.sku}] - ${size} - Qty ${l.qty} - ${priceLabel(p, l.qty)}${stock}`]
   })
   const notes = c.notes.trim()
+  const totals = cartTotals(lines, products)
   return [
     `Hello ${storeName}, I would like to order:`,
     '',
     ...items,
     '',
-    unpricedCount(lines, products) === 0
-      ? `Items subtotal: ${formatKes(cartSubtotal(lines, products))}`
-      : `Items subtotal: ${formatKes(cartSubtotal(lines, products))} for priced items, plus ${unpricedCount(lines, products)} item(s) with price to confirm`,
+    `Items subtotal: ${formatKes(totals.subtotal)}${totals.savings > 0 ? ` (pair deal applied, saving ${formatKes(totals.savings)})` : ''}`,
     c.fulfillment === 'Delivery' ? 'Delivery fee: to confirm' : 'Pickup: no delivery fee',
     '',
     `Name: ${c.fullName.trim()}`,

@@ -19,7 +19,7 @@ export interface Product {
   name: string
   category: Category
   description: string
-  /** Price in KES. null = not yet confirmed by the shop (shown as "Price to confirm"). */
+  /** Own price in KES. null = the shop's standard price and pair deal (see lib/pricing.ts). */
   priceKes: number | null
   /** Verified garment size (e.g. "M", "L", "42"). null = not yet verified by the shop. */
   size: string | null

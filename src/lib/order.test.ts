@@ -44,14 +44,21 @@ describe('buildOrderMessage', () => {
     expect(msg).toContain('Butterfly Print Camp Shirt [KK-01]')
     expect(msg).toContain('Size to confirm')
     expect(msg).toContain('KES 1,500')
+    expect(msg).toContain('Items subtotal: KES 1,500')
     expect(msg).toContain('Delivery fee: to confirm')
     expect(msg).toContain('not a confirmed order')
   })
-  it('never invents a price for unpriced items', () => {
-    const msg = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
-    expect(msg).toContain('Price to confirm')
-    expect(msg).toContain('1 item(s) with price to confirm')
-    expect(msg).not.toMatch(/KES [1-9]/)
+  it('uses the standard price and the pair deal for two shirts', () => {
+    const two = [
+      { productId: SEED_PRODUCTS[0].id, qty: 1 },
+      { productId: SEED_PRODUCTS[1].id, qty: 1 },
+    ]
+    const msg = buildOrderMessage(two, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
+    expect(msg).toContain('KES 350')
+    expect(msg).toContain('Items subtotal: KES 600 (pair deal applied, saving KES 100)')
+    const one = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
+    expect(one).toContain('Items subtotal: KES 350')
+    expect(one).not.toContain('pair deal')
   })
   it('url-encodes into a wa.me link', () => {
     const url = buildWhatsAppUrl('+254 712 345 678', 'Hi & bye\nline 2')

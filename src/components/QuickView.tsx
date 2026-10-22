@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { priceLabel } from '../lib/inventory'
+import { pairDealText } from '../lib/pricing'
 import type { Product } from '../types'
 import AddToBagButton from './AddToBagButton'
 import Modal from './Modal'
@@ -25,7 +26,8 @@ export default function QuickView({ product: p, onClose }: Props) {
           <div className="detail-info">
             <div className="eyebrow">{p.category}</div>
             <h2>{p.name}</h2>
-            <div className={`price big${p.priceKes === null ? ' tbc' : ''}`}>{priceLabel(p)}</div>
+            <div className="price big">{priceLabel(p)}</div>
+            {p.priceKes === null && <p className="deal">{pairDealText()}</p>}
             {p.description && <p>{p.description}</p>}
             <ProductSpecs product={p} />
             <AddToBagButton product={p} />

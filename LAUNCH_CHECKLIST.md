@@ -19,7 +19,11 @@ Supplied by the owner and already in the site (please re-check): WhatsApp/call 0
 
 ## Per-shirt data (36 seed items, KK-01 … KK-36)
 
-Built from the shop's own photos (`public/assets/products/`). For every shirt the shop must supply: **price**, exact size, measurements, condition, flaws, stock count (usually 1) and the true product name. Until verified they show "Price to confirm" / "Details to confirm". Names are plain descriptions of what the photo shows, not verified product names. Prototype prices and badges ("Bestseller") were dropped as unsubstantiated.
+**Pricing (from the owner):** KES 350 for one shirt, KES 600 for two (`src/lib/pricing.ts`, applied to every shirt without its own price). 
+- [ ] Confirm what happens with 3+ shirts. Currently assumed: each full pair is KES 600 and a leftover single is KES 350 (3 shirts = 950, 4 = 1,200).
+- [ ] Confirm the pair deal applies to any two shirts (not only matching sleeve types).
+
+Built from the shop's own photos (`public/assets/products/`). For every shirt the shop must supply: exact size, measurements, condition, flaws, stock count (usually 1) and the true product name. Until verified they show "Details to confirm". Names are plain descriptions of what the photo shows, not verified product names. Prototype prices and badges ("Bestseller") were dropped as unsubstantiated.
 
 - [ ] **Check the photo grouping.** Photos were grouped per shirt by eye from contact sheets, so a product may contain a photo of a different shirt or miss one. Fix in `/admin` (Photos) or in `src/data/seed.ts`.
 - [ ] 27 photos (indoor set: #4–9, 12–15, 35–38, 43–52, 55–56, 66, 70) show cream/sage/striped shirts that could not be told apart reliably and were **not added**. Tell me which shirts they are (or which photos belong together) and they can be added.

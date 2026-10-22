@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { CART_STORAGE_KEY, addLine, cartCount, cartSubtotal, parseStoredCart, reconcileCart, removeLine, setLineQty } from '../lib/cart'
+import { CART_STORAGE_KEY, addLine, cartCount, parseStoredCart, reconcileCart, removeLine, setLineQty } from '../lib/cart'
+import { cartTotals } from '../lib/pricing'
 import type { CartLine, Product } from '../types'
 import { useProducts } from './ProductsContext'
 import { useToast } from './ToastContext'
@@ -8,6 +9,10 @@ interface CartValue {
   lines: CartLine[]
   count: number
   subtotal: number
+  /** KES saved by the pair deal. */
+  savings: number
+  /** Standard-priced shirts in the bag (those eligible for the pair deal). */
+  standardCount: number
   isOpen: boolean
   openCart: () => void
   closeCart: () => void
@@ -79,7 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     () => ({
       lines,
       count: cartCount(lines),
-      subtotal: cartSubtotal(lines, all),
+      ...(({ subtotal, savings, standardCount }) => ({ subtotal, savings, standardCount }))(cartTotals(lines, all)),
       isOpen,
       openCart: () => setOpen(true),
       closeCart: () => setOpen(false),

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SEED_PRODUCTS } from '../data/seed'
 import type { Product } from '../types'
-import { addLine, cartCount, cartSubtotal, parseStoredCart, reconcileCart, removeLine, setLineQty, unpricedCount } from './cart'
+import { addLine, cartCount, cartSubtotal, parseStoredCart, reconcileCart, removeLine, setLineQty } from './cart'
 
 const one: Product = { ...SEED_PRODUCTS[0], priceKes: 1500 }
 const two: Product = { ...SEED_PRODUCTS[1], priceKes: 1800 }
@@ -32,14 +32,19 @@ describe('cart', () => {
     expect(cartSubtotal(lines, [one, two])).toBe(3300)
     expect(removeLine(lines, one.id)).toHaveLength(1)
   })
-  it('counts unpriced lines separately and keeps them out of the subtotal', () => {
-    const unpriced: Product = { ...SEED_PRODUCTS[4], priceKes: null }
-    const lines = [
-      { productId: one.id, qty: 1 },
-      { productId: unpriced.id, qty: 1 },
-    ]
-    expect(cartSubtotal(lines, [one, unpriced])).toBe(1500)
-    expect(unpricedCount(lines, [one, unpriced])).toBe(1)
+  it('applies the shop pair deal to standard-priced shirts', () => {
+    const a = SEED_PRODUCTS[4]
+    const b = SEED_PRODUCTS[5]
+    expect(cartSubtotal([{ productId: a.id, qty: 1 }], [a, b])).toBe(350)
+    expect(
+      cartSubtotal(
+        [
+          { productId: a.id, qty: 1 },
+          { productId: b.id, qty: 1 },
+        ],
+        [a, b],
+      ),
+    ).toBe(600)
   })
   it('reconciles stale, sold and over-quantity lines', () => {
     const lines = [
