@@ -226,9 +226,10 @@ test('bag counter updates when products are added and removed', async ({ page })
   await expect(page.locator('.bag-art.bump')).toHaveCount(1) // add animation played
   const badge = await count.evaluate((el) => getComputedStyle(el).backgroundColor)
   expect(badge).toBe('rgb(162, 77, 53)') // terracotta
-  const size = await page.locator('.bag-svg').boundingBox()
-  expect(size!.width).toBeGreaterThanOrEqual(28)
-  expect(size!.width).toBeLessThanOrEqual(32)
+  // Layout size (unaffected by the bounce transform) stays within the 28-32px spec.
+  const size = await page.locator('.bag-svg').evaluate((el) => (el as unknown as SVGElement & { width: SVGAnimatedLength }).width.baseVal.value)
+  expect(size).toBeGreaterThanOrEqual(28)
+  expect(size).toBeLessThanOrEqual(32)
   await page.locator('.toast').getByRole('button', { name: 'View bag' }).click()
   await page.getByRole('dialog', { name: 'Shopping bag' }).getByRole('button', { name: 'Remove' }).click()
   await expect(count).toHaveCount(0)
