@@ -87,7 +87,8 @@ test('owner publishes new stock with photos and it shows on the storefront witho
   // Searchable and filterable in the shop, and the detail page works.
   await page.goto('/shop?sort=newest')
   await expect(page.locator('.product').first()).toContainText('Navy Oxford Shirt') // newest first
-  await page.getByRole('searchbox').fill('navy')
+  // "navy" also matches a seeded shirt, so search a word only the new item has.
+  await page.getByRole('searchbox').fill('oxford')
   await expect(page.getByText('1 item', { exact: true })).toBeVisible()
   await page.getByLabel('Category').selectOption('Long sleeve')
   await expect(page.getByText('1 item', { exact: true })).toBeVisible()
@@ -96,7 +97,7 @@ test('owner publishes new stock with photos and it shows on the storefront witho
   const productUrl = page.url()
   await expect(page.getByText('KES 1,500').first()).toBeVisible()
   await expect(page.getByText('Colour')).toBeVisible()
-  await expect(page.getByText('One piece available')).toBeVisible()
+  await expect(page.locator('.stock', { hasText: 'One piece available' })).toBeVisible()
 
   // WhatsApp inquiry is built from the real product data and does not change stock.
   const ask = page.getByRole('link', { name: /Ask on WhatsApp/ })
@@ -109,7 +110,7 @@ test('owner publishes new stock with photos and it shows on the storefront witho
   await popup.close()
   expect(waUrls.length).toBeGreaterThan(0)
   await page.reload()
-  await expect(page.getByText('One piece available')).toBeVisible() // still available: opening WhatsApp never marks it sold
+  await expect(page.locator('.stock', { hasText: 'One piece available' })).toBeVisible() // still available: opening WhatsApp never marks it sold
 
   // Persists across a reload (and shows in the inquiries log).
   await page.goto(productUrl)
@@ -327,7 +328,7 @@ for (const vp of [
     expect(Math.abs(info.w - info.h)).toBeLessThan(1) // square, not squashed
     expect(info.w).toBeGreaterThanOrEqual(40)
     await expect(page.locator('footer img').first()).toBeVisible()
-    await expect(page.locator('link[rel=icon]')).toHaveAttribute('href', '/logo.png')
+    await expect(page.locator('link[rel=icon]')).toHaveAttribute('href', '/favicon-48.png')
   })
 }
 
