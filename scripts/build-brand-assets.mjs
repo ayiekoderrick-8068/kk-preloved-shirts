@@ -1,8 +1,10 @@
-// Builds the ACTIVE logo (approved Concept B, "Tag", drawn as KK for "KK Pre-Loved Shirts") from one vector source.
-//   docs/brand/approved/   master SVGs (light, dark, favicon)
-//   public/                logo.svg, logo-dark.svg, favicon.svg + raster copies the site and social cards use
-// The previous illustrated logo is kept untouched at docs/brand/logo-original.png.
-// To change the letters, edit LETTERS below and rerun:  node scripts/build-brand-assets.mjs
+// SHELVED alternative logo: Concept B "Tag" drawn as KK, built from one vector source.
+//   docs/brand/approved/   master SVGs (light, dark, favicon)  <- always written
+//   public/                logo.svg, logo-dark.svg, favicon.svg + rasters  <- only with --activate
+// The ACTIVE logo is the owner's illustrated one (docs/brand/logo-original.png, built by build-logo-assets.mjs).
+// Running this script WITHOUT --activate leaves the live logo untouched.
+// To change the letters, edit LETTERS below.  To switch the site to the tag: node scripts/build-brand-assets.mjs --activate
+// (then also add the favicon.svg link to index.html).
 import { mkdirSync, writeFileSync } from 'node:fs'
 import sharp from 'sharp'
 
@@ -39,6 +41,10 @@ const files = {
   'favicon.svg': favicon(themes.light),
 }
 for (const [n, s] of Object.entries(files)) writeFileSync(`docs/brand/approved/${n}`, s)
+if (!process.argv.includes('--activate')) {
+  console.log('masters written to docs/brand/approved; the live logo in public/ was NOT changed (use --activate to switch)')
+  process.exit(0)
+}
 writeFileSync('public/logo.svg', files['logo-light.svg'])
 writeFileSync('public/logo-dark.svg', files['logo-dark.svg'])
 writeFileSync('public/favicon.svg', files['favicon.svg'])
