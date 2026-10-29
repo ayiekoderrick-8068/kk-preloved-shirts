@@ -113,7 +113,7 @@ Open **Shop Settings**, change what you need, then press **Save settings**. Chan
 | **Shop slogan** | Your approved wording. Leave it blank until you have decided; nothing is shown until you fill it in. |
 | **Store announcement** | A short message shown in a bar at the top of every page (for example a holiday notice). Leave blank for none. |
 | **Shop name, Contact email, Phone number for calls, Shop description** | Shown across the site and in the footer |
-| **Logo** | **Upload a new logo** (square images work best). **Use the original logo** goes back to the first one. |
+| **Logo** | **Upload a new logo** (square images work best). **Use the standard logo** goes back to the shop's standard KK logo. |
 
 ![Shop Settings](screenshots/06-shop-settings.png)
 

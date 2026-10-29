@@ -26,7 +26,15 @@ for (let i = 0; i < 40; i++) {
 const browser = await chromium.launch()
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
 const page = await ctx.newPage()
-const shot = (name, opts = {}) => page.screenshot({ path: `${out}/${name}.png`, ...opts })
+// Photos decode asynchronously, so let the network settle before every capture or cards come out blank.
+const settle = async (pg) => {
+  await pg.waitForLoadState('networkidle')
+  await pg.waitForTimeout(800)
+}
+const shot = async (name, opts = {}) => {
+  await settle(page)
+  await page.screenshot({ path: `${out}/${name}.png`, ...opts })
+}
 
 await page.goto(`${base}/admin`)
 await page.getByRole('navigation', { name: 'Admin' }).waitFor()
@@ -78,8 +86,10 @@ const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, 
 const m = await phone.newPage()
 await m.goto(`${base}/shop?sort=newest`)
 await m.locator('.product').first().waitFor()
+await settle(m)
 await m.screenshot({ path: `${out}/09-phone-shop.png` })
 await m.goto(`${base}/`)
+await settle(m)
 await m.screenshot({ path: `${out}/10-phone-home.png` })
 
 await browser.close()
