@@ -48,7 +48,7 @@ If you are told "this account is not an admin", the owner account has not been a
 
 - Press **Choose photos** (or drag photos onto the box). You can pick **several photos at once**.
 - Use real photos of **that exact item**. Photos from a phone camera are fine: JPEG, PNG or WebP, up to 25 MB each. (iPhone photos saved as HEIC must be saved as JPEG first.)
-- The website automatically makes three sizes (up to 1600 px on the long edge) so it loads fast on phones and still looks sharp when zoomed. Keep your original camera photos on your phone or computer: the website stores the resized copies, not the originals.
+- The website automatically makes three sizes (up to 1600 px on the long edge) so it loads fast on phones and still looks sharp when zoomed. - **Your original photo is kept safely too.** Below the photo box there is a tick box, **Also keep the original full-resolution photo**, switched on by default. The untouched original is stored privately: customers can never see or download it, and only you (signed in) can. To get it back, press **Original** under that photo. Photos added before this feature existed have no Original button. Originals use storage space (a few MB each), so untick the box for photos you do not need to keep.
 - The **first photo is the main photo**, the one customers see in the shop. To change it, press **Make main** under another photo. Use **←** and **→** to reorder, and **Remove** to delete one.
 - To **replace a photo** later, edit the item, **Remove** the old one and add the new one.
 

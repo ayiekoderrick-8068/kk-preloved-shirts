@@ -1,5 +1,7 @@
 # Admin & product management
 
+> Connecting and testing a real project: follow [SUPABASE_SETUP.md](SUPABASE_SETUP.md). It supersedes the short setup list below (there are now three SQL files to run in order, including the private originals bucket). For the owner's day-to-day steps see [how-to-add-new-stock.md](how-to-add-new-stock.md).
+
 ## One-time Supabase setup
 
 1. Create a project at supabase.com.
