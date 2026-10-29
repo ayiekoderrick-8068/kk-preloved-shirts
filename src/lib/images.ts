@@ -22,7 +22,18 @@ export function srcSetFor(url: string): string | undefined {
   return IMAGE_WIDTHS.map((w) => `${variantUrl(url, w)} ${w}w`).join(', ')
 }
 
-const STATIC_RE = /^(\/assets\/products\/p-\d+)\.webp$/
+const ORIGINAL_RE = /\/product-images\/(.+)-1600\.(?:webp|jpg)$/
+
+/**
+ * Path of the private original for an uploaded photo (bucket `product-originals`), or undefined when the photo is not
+ * one of ours (built-in shop photos, external links). The original shares the photo's id: <id>-1600.webp <-> <id>-original.
+ */
+export function originalPathFor(url: string): string | undefined {
+  const m = ORIGINAL_RE.exec(url)
+  return m ? `${m[1]}-original` : undefined
+}
+
+const STATIC_RE =/^(\/assets\/products\/p-\d+)\.webp$/
 /** Static photos are 800-1100px wide (full size ~880w); `scripts/optimize-images.mjs` derives the other files. */
 const STATIC_FULL_WIDTH = 880
 const STATIC_SMALL_WIDTH = 480

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fitWithin, logoSources, srcSetFor, staticSources, variantUrl } from './images'
+import { fitWithin, logoSources, originalPathFor, srcSetFor, staticSources, variantUrl } from './images'
 
 describe('staticSources (built-in shop photos)', () => {
   it('gives AVIF and WebP srcsets with a phone-sized and a full-size file', () => {
@@ -20,6 +20,17 @@ describe('uploaded photo variants', () => {
     expect(variantUrl('https://cdn/x/abc-1600.webp', 480)).toBe('https://cdn/x/abc-480.webp')
     expect(srcSetFor('https://cdn/x/abc-1600.webp')).toBe('https://cdn/x/abc-480.webp 480w, https://cdn/x/abc-960.webp 960w, https://cdn/x/abc-1600.webp 1600w')
     expect(srcSetFor('https://cdn/x/plain.jpg')).toBeUndefined()
+  })
+})
+
+describe('originalPathFor', () => {
+  it('links an uploaded photo to its private original', () => {
+    expect(originalPathFor('https://x.supabase.co/storage/v1/object/public/product-images/products/abc-1600.webp')).toBe('products/abc-original')
+    expect(originalPathFor('https://x.supabase.co/storage/v1/object/public/product-images/products/abc-1600.jpg')).toBe('products/abc-original')
+  })
+  it('has none for built-in or external photos', () => {
+    expect(originalPathFor('/assets/products/p-002.webp')).toBeUndefined()
+    expect(originalPathFor('https://example.com/shirt.jpg')).toBeUndefined()
   })
 })
 

@@ -1,6 +1,6 @@
 import { useRef, useState, type DragEvent } from 'react'
-import { checkImageFile } from '../../lib/images'
-import { uploadImage } from '../../lib/productRepo'
+import { checkImageFile, originalPathFor, variantUrl } from '../../lib/images'
+import { originalDownloadUrl, uploadImage } from '../../lib/productRepo'
 import { hasSupabase } from '../../lib/config'
 
 interface Props {
@@ -24,6 +24,16 @@ export default function ImageUploader({ images, onChange, error, folder }: Props
   const [over, setOver] = useState(false)
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [url, setUrl] = useState('')
+  const [keepOriginal, setKeepOriginal] = useState(true)
+
+  async function downloadOriginal(photoUrl: string) {
+    try {
+      window.open(await originalDownloadUrl(photoUrl), '_blank', 'noopener')
+      setProblems([])
+    } catch (e) {
+      setProblems([e instanceof Error ? e.message : 'Could not get the original.'])
+    }
+  }
 
   const update = (next: string[]) => {
     latest.current = next
@@ -41,7 +51,7 @@ export default function ImageUploader({ images, onChange, error, folder }: Props
     for (const [i, f] of ok.entries()) {
       setBusy(`Uploading photo ${i + 1} of ${ok.length}…`)
       try {
-        update([...latest.current, await uploadImage(f, folder)])
+        update([...latest.current, await uploadImage(f, folder, { keepOriginal: hasSupabase && keepOriginal, onWarning: (m) => found.push(m) })])
       } catch (e) {
         found.push(e instanceof Error ? e.message : `Could not upload "${f.name}".`)
       }
@@ -99,6 +109,11 @@ export default function ImageUploader({ images, onChange, error, folder }: Props
           JPEG, PNG or WebP. Photos are resized automatically so they load quickly on phones without losing detail.
           {!hasSupabase && ' Demo mode keeps small copies in this browser only.'}
         </p>
+        {hasSupabase && (
+          <label className="check">
+            <input type="checkbox" checked={keepOriginal} onChange={(e) => setKeepOriginal(e.target.checked)} /> Also keep the original full-resolution photo (private: only signed-in admins can download it)
+          </label>
+        )}
       </div>
 
       {busy && <p role="status" className="note">{busy}</p>}
@@ -132,12 +147,13 @@ export default function ImageUploader({ images, onChange, error, folder }: Props
               }}
               onDragEnd={() => setDragIndex(null)}
             >
-              <img src={src} alt={`Photo ${i + 1}${i === 0 ? ' (main)' : ''}`} />
+              <img src={variantUrl(src, 480)} alt={`Photo ${i + 1}${i === 0 ? ' (main)' : ''}`} />
               {i === 0 && <span className="main-badge">Main</span>}
               <div className="photo-actions">
                 {i !== 0 && <button type="button" onClick={() => move(i, 0)} aria-label={`Make photo ${i + 1} the main photo`}>Make main</button>}
                 <button type="button" onClick={() => move(i, i - 1)} disabled={i === 0} aria-label={`Move photo ${i + 1} earlier`}>←</button>
                 <button type="button" onClick={() => move(i, i + 1)} disabled={i === images.length - 1} aria-label={`Move photo ${i + 1} later`}>→</button>
+                {hasSupabase && originalPathFor(src) && <button type="button" onClick={() => void downloadOriginal(src)} aria-label={`Download the original of photo ${i + 1}`}>Original</button>}
                 <button type="button" onClick={() => update(images.filter((_, j) => j !== i))} aria-label={`Remove photo ${i + 1}`}>Remove</button>
               </div>
             </li>

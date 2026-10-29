@@ -267,5 +267,29 @@ await check('can read and manage inquiries', async () => {
   ok((await asAdmin(() => q(`update public.inquiries set handled = true`))).affectedRows >= 1, 'admin cannot update')
 })
 
+console.log('Original (full-resolution) photos')
+await check('the originals bucket is private and limited to photos of at most 25 MB', async () => {
+  const b = (await q(`select public, file_size_limit, allowed_mime_types from storage.buckets where id = 'product-originals'`)).rows[0]
+  ok(b, 'bucket missing')
+  ok(b.public === false, 'originals bucket must not be public')
+  ok(Number(b.file_size_limit) === 26214400, 'size limit')
+  ok(!b.allowed_mime_types.includes('text/html'), 'mime types')
+  ok((await q(`select public from storage.buckets where id = 'product-images'`)).rows[0].public === true, 'storefront bucket must stay public')
+})
+await check('visitors cannot read, add, change or delete originals', async () => {
+  await asAdmin(() => q(`insert into storage.objects (bucket_id, name) values ('product-originals', 'products/seed-original')`))
+  for (const [label, run] of [['anon', asAnon], ['signed-in non-admin', asVisitor]]) {
+    ok((await run(() => count(`select count(*) from storage.objects where bucket_id = 'product-originals'`))) === 0, `${label} can see originals`)
+    await rejects(run(() => q(`insert into storage.objects (bucket_id, name) values ('product-originals', 'products/x-original')`)), /row-level security/i, `${label} upload`)
+    ok((await run(() => q(`update storage.objects set name = 'hijacked' where bucket_id = 'product-originals'`))).affectedRows === 0, `${label} renamed an original`)
+    ok((await run(() => q(`delete from storage.objects where bucket_id = 'product-originals'`))).affectedRows === 0, `${label} deleted an original`)
+  }
+})
+await check('an admin can add, read and delete originals', async () => {
+  await asAdmin(() => q(`insert into storage.objects (bucket_id, name) values ('product-originals', 'products/abc-original')`))
+  ok((await asAdmin(() => count(`select count(*) from storage.objects where bucket_id = 'product-originals' and name = 'products/abc-original'`))) === 1, 'admin cannot read')
+  ok((await asAdmin(() => q(`delete from storage.objects where bucket_id = 'product-originals' and name = 'products/abc-original'`))).affectedRows === 1, 'admin cannot delete')
+})
+
 console.log(failures === 0 ? '\nAll database checks passed.' : `\n${failures} database check(s) FAILED.`)
 process.exit(failures === 0 ? 0 : 1)

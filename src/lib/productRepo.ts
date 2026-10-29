@@ -1,6 +1,6 @@
 import { SEED_PRODUCTS } from '../data/seed'
 import type { Product } from '../types'
-import { blobToDataUrl, checkImageFile, IMAGE_WIDTHS, resizeImage } from './images'
+import { blobToDataUrl, checkImageFile, IMAGE_WIDTHS, originalPathFor, resizeImage } from './images'
 import { supabase } from './supabase'
 
 const DEMO_KEY = 'kk-preloved-shirts:demo-inventory:v2'
@@ -192,7 +192,14 @@ const DEMO_MAX_BYTES = 220 * 1024
  * Returns the URL of the largest size; the storefront derives the others (see lib/images.ts).
  * In demo mode (no database) a single small copy is kept in this browser instead, for trying the workflow.
  */
-export async function uploadImage(file: File, folder = 'products'): Promise<string> {
+export interface UploadOptions {
+  /** Also keep the untouched camera original in the private `product-originals` bucket (admins only). */
+  keepOriginal?: boolean
+  /** Called when the shop photo was saved but something secondary (the original) was not. */
+  onWarning?: (message: string) => void
+}
+
+export async function uploadImage(file: File, folder = 'products', opts: UploadOptions = {}): Promise<string> {
   const problem = checkImageFile(file)
   if (problem) throw new Error(problem)
 
@@ -216,5 +223,22 @@ export async function uploadImage(file: File, folder = 'products'): Promise<stri
     await bucket.remove(names) // don't leave half an upload behind
     throw new Error(failed.error.message)
   }
+  if (opts.keepOriginal) {
+    // The file as it left the camera: never resized or re-encoded. A failure here must not lose the shop photo.
+    const original = await supabase.storage.from('product-originals').upload(`${folder}/${id}-original`, file, { contentType: file.type, upsert: false })
+    if (original.error) opts.onWarning?.(`"${file.name}" was added to the shop, but its full-resolution original could not be kept (${original.error.message}).`)
+  }
   return bucket.getPublicUrl(names[names.length - 1]).data.publicUrl
+}
+
+/**
+ * Short-lived download link for a photo's private original. Only a signed-in admin can get one (enforced by the
+ * database, not just by this screen). Throws a plain-language message when there is none.
+ */
+export async function originalDownloadUrl(photoUrl: string): Promise<string> {
+  const path = originalPathFor(photoUrl)
+  if (!supabase || !path) throw new Error('No original is stored for this photo.')
+  const { data, error } = await supabase.storage.from('product-originals').createSignedUrl(path, 120, { download: true })
+  if (error || !data) throw new Error('No original is stored for this photo (it may have been added before originals were kept).')
+  return data.signedUrl
 }
