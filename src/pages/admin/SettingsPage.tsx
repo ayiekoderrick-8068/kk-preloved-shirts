@@ -127,7 +127,7 @@ function SettingsForm() {
                 }}
               />
             </label>
-            <button type="button" className="text-link" onClick={() => set('logoUrl', DEFAULT_SETTINGS.logoUrl)}>Use the original logo</button>
+            <button type="button" className="text-link" onClick={() => set('logoUrl', DEFAULT_SETTINGS.logoUrl)}>Use the standard logo</button>
             <p className="note">Square images work best. Save the settings to publish the new logo.</p>
           </div>
         </div>

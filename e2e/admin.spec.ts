@@ -328,7 +328,8 @@ for (const vp of [
     expect(Math.abs(info.w - info.h)).toBeLessThan(1) // square, not squashed
     expect(info.w).toBeGreaterThanOrEqual(40)
     await expect(page.locator('footer img').first()).toBeVisible()
-    await expect(page.locator('link[rel=icon]')).toHaveAttribute('href', '/favicon-48.png')
+    await expect(page.locator('link[rel=icon][type="image/svg+xml"]')).toHaveAttribute('href', '/favicon.svg')
+    await expect(page.locator('link[rel=icon][type="image/png"]')).toHaveAttribute('href', '/favicon-48.png')
   })
 }
 
