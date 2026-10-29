@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { config } from '../lib/config'
+import { useSettings } from '../context/SettingsContext'
+import SocialLinks from './SocialLinks'
+import WhatsAppButton from './WhatsAppButton'
 
 const LINKS: [string, string][] = [
   ['/', 'Home'],
@@ -12,6 +14,7 @@ const LINKS: [string, string][] = [
 
 export default function Header() {
   const { count, openCart, addPulse } = useCart()
+  const { settings } = useSettings()
   const [menuOpen, setMenuOpen] = useState(false)
   const { pathname } = useLocation()
   const navigate = useNavigate()
@@ -24,9 +27,12 @@ export default function Header() {
   return (
     <header className="nav">
       <div className="nav-inner">
-        <Link className="logo" to="/" aria-label={`${config.storeName} home`}>
-          <img src="/logo.png" alt="" width="56" height="56" />
-          <span className="logo-text">{config.storeName}</span>
+        <Link className="logo" to="/" aria-label={`${settings.shopName} home`}>
+          <img src={settings.logoUrl} alt="" width="56" height="56" />
+          <span className="logo-words">
+            <span className="logo-text">{settings.shopName}</span>
+            {settings.slogan && <span className="logo-slogan">{settings.slogan}</span>}
+          </span>
         </Link>
         <nav className="nav-links" aria-label="Main">
           {LINKS.map(([to, label]) => (
@@ -73,6 +79,10 @@ export default function Header() {
             {label}
           </NavLink>
         ))}
+        <div className="mobile-contact">
+          <WhatsAppButton label="Chat on WhatsApp" />
+          <SocialLinks />
+        </div>
       </nav>
     </header>
   )

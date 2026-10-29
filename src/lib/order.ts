@@ -74,17 +74,21 @@ export function buildOrderMessage(lines: CartLine[], products: Product[], c: Cus
   ].join('\n')
 }
 
-/** WhatsApp link asking the shop whether one specific shirt is still available (name, SKU/ID and page link). */
-export function buildAvailabilityUrl(number: string, product: Pick<Product, 'id' | 'sku' | 'name'>, storeName: string, siteOrigin: string): string {
-  const message = [
-    `Hello ${storeName}, is this shirt still available?`,
+type Inquirable = Pick<Product, 'id' | 'sku' | 'name' | 'size' | 'priceKes'> & Partial<Pick<Product, 'discountPriceKes'>>
+
+/** Product inquiry text built from the product's own data: name, size, price, SKU and page link. */
+export function buildInquiryMessage(product: Inquirable, storeName: string, siteOrigin: string): string {
+  return [
+    `Hello ${storeName}! I'm interested in ${product.name}, size ${product.size ?? 'to be confirmed'}, priced at ${priceLabel(product)}. Is it still available?`,
     '',
-    `${product.name} [${product.sku}]`,
+    `SKU: ${product.sku}`,
     `${siteOrigin.replace(/\/$/, '')}/shop/${product.id}`,
-    '',
-    'Please confirm availability and size. Thank you!',
   ].join('\n')
-  return buildWhatsAppUrl(number, message)
+}
+
+/** WhatsApp link asking the shop whether one specific item is still available. Opening it never changes stock. */
+export function buildAvailabilityUrl(number: string, product: Inquirable, storeName: string, siteOrigin: string): string {
+  return buildWhatsAppUrl(number, buildInquiryMessage(product, storeName, siteOrigin))
 }
 
 export const buildWhatsAppUrl =(number: string, message: string): string =>

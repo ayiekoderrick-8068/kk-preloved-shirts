@@ -20,9 +20,13 @@ export default function ProductSpecs({ product: p }: { product: Product }) {
     ['SKU', p.sku, true],
     ['Category', p.category, true],
     ['Size', p.size ?? TBC, p.size !== null],
+    // Colour and brand are optional on older listings, so they only appear once the shop has filled them in.
+    ...(p.color ? ([['Colour', p.color, true]] as [string, string, boolean][]) : []),
+    ...(p.brand ? ([['Brand', p.brand, true]] as [string, string, boolean][]) : []),
     ['Condition', p.condition ?? TBC, p.condition !== null],
     ['Measurements', measurementText(p), p.measurements !== null],
     ['Flaws', p.flaws === null ? TBC : p.flaws === '' ? 'None found on inspection' : p.flaws, p.flaws !== null],
+    ...(p.details ? ([['Details', p.details, true]] as [string, string, boolean][]) : []),
     ['Availability', stockLabel(p), true],
   ]
   return (

@@ -2,10 +2,12 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useProducts } from '../context/ProductsContext'
-import { config, hasWhatsApp } from '../lib/config'
+import { useSettings } from '../context/SettingsContext'
+import { config } from '../lib/config'
 import { formatKes, maxQuantity, priceLabel } from '../lib/inventory'
 import { DEFAULT_RULE } from '../lib/pricing'
 import { buildOrderMessage, buildWhatsAppUrl, validateCustomer, type CustomerErrors } from '../lib/order'
+import { logInquiry } from '../lib/shopRepo'
 import type { CustomerDetails } from '../types'
 import Modal from './Modal'
 import ProductImage from './ProductImage'
@@ -15,6 +17,7 @@ const EMPTY: CustomerDetails = { fullName: '', phone: '', fulfillment: 'Delivery
 export default function CartDrawer() {
   const { lines, subtotal, savings, standardCount, isOpen, closeCart, setQty, remove, clear } = useCart()
   const { all } = useProducts()
+  const { settings, hasWhatsApp } = useSettings()
   const [checkout, setCheckout] = useState(false)
   const [form, setForm] = useState<CustomerDetails>(EMPTY)
   const [errors, setErrors] = useState<CustomerErrors>({})
@@ -50,10 +53,15 @@ export default function CartDrawer() {
       document.getElementById(`field-${Object.keys(errs)[0]}`)?.focus()
       return
     }
-    const text = buildOrderMessage(lines, all, form, config.storeName)
+    const text = buildOrderMessage(lines, all, form, settings.shopName)
     setMessage(text)
+    // Record which items were requested (no customer details). Never changes stock.
+    for (const l of lines) {
+      const p = all.find((x) => x.id === l.productId)
+      if (p) logInquiry(p, 'order-request')
+    }
     if (hasWhatsApp) {
-      window.open(buildWhatsAppUrl(config.whatsappNumber, text), '_blank', 'noopener')
+      window.open(buildWhatsAppUrl(settings.whatsappNumber, text), '_blank', 'noopener')
       setStatus('WhatsApp should have opened with your request. Press send there. Your order is NOT confirmed until the shop replies.')
     } else {
       const ok = await copy(text)
@@ -163,7 +171,7 @@ export default function CartDrawer() {
               </Field>
               <label className="check">
                 <input id="field-consent" type="checkbox" checked={form.consent} onChange={(e) => set('consent', e.target.checked)} aria-invalid={!!errors.consent} />
-                <span>I agree to share these order details with {config.storeName} via WhatsApp.</span>
+                <span>I agree to share these order details with {settings.shopName} via WhatsApp.</span>
               </label>
               {errors.consent && <p className="error" role="alert">{errors.consent}</p>}
               <button type="submit" className="primary full">

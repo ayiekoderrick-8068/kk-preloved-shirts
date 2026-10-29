@@ -1,19 +1,28 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
+import { useSettings } from '../context/SettingsContext'
 import { pairDealText } from '../lib/pricing'
 import { DEFAULT_FILTERS, filterProducts, sortProducts, verifiedOptions, type Availability, type ProductFilters, type SortKey } from '../lib/inventory'
-import { CATEGORIES } from '../lib/validate'
 import type { Product } from '../types'
 
+const PAGE_SIZE = 24
+const SORTS: SortKey[] = ['newest', 'featured', 'price-asc', 'price-desc', 'name']
+
 export default function Shop() {
-  const { live, loading, error } = useProducts()
-  const [filters, setFilters] = useState<ProductFilters>(DEFAULT_FILTERS)
-  const [sort, setSort] = useState<SortKey>('featured')
+  const { live, categories, loading, error } = useProducts()
+  const { settings } = useSettings()
+  const [params, setParams] = useSearchParams()
+  const [filters, setFilters] = useState<ProductFilters>(() => ({ ...DEFAULT_FILTERS, category: params.get('category') ?? 'all' }))
   const [quick, setQuick] = useState<Product | null>(null)
+  const [visible, setVisible] = useState(PAGE_SIZE)
+
+  const sortParam = params.get('sort') as SortKey | null
+  const sort: SortKey = sortParam && SORTS.includes(sortParam) ? sortParam : 'newest'
+  const setSort = (s: SortKey) => setParams((prev) => { const n = new URLSearchParams(prev); n.set('sort', s); return n }, { replace: true })
 
   const sizes = useMemo(() => verifiedOptions(live, 'size'), [live])
   const conditions = useMemo(() => verifiedOptions(live, 'condition'), [live])
@@ -27,12 +36,16 @@ export default function Shop() {
   }, [focusToken])
 
   const results = useMemo(() => sortProducts(filterProducts(live, filters), sort), [live, filters, sort])
-  const set = <K extends keyof ProductFilters>(k: K, v: ProductFilters[K]) => setFilters((f) => ({ ...f, [k]: v }))
+  const shown = results.slice(0, visible)
+  const set = <K extends keyof ProductFilters>(k: K, v: ProductFilters[K]) => {
+    setFilters((f) => ({ ...f, [k]: v }))
+    setVisible(PAGE_SIZE)
+  }
   const active = JSON.stringify(filters) !== JSON.stringify(DEFAULT_FILTERS)
 
   return (
     <section className="section collection">
-      <Seo title="Shop all pre-loved shirts" description="Browse every pre-loved shirt at KK Pre-Loved Shirts. Search, filter by category and availability, and sort by price." path="/shop" />
+      <Seo title="Shop all pre-loved clothing" description={`Browse every pre-loved piece at ${settings.shopName}. Search, filter by category and availability, and sort by price.`} path="/shop" />
       <div className="section-heading">
         <div>
           <p className="eyebrow">The complete lineup</p>
@@ -43,16 +56,16 @@ export default function Shop() {
         </p>
       </div>
 
-      <form className="toolbar" role="search" aria-label="Filter shirts" onSubmit={(e) => e.preventDefault()}>
+      <form className="toolbar" role="search" aria-label="Filter items" onSubmit={(e) => e.preventDefault()}>
         <label className="grow">
           <span className="label">Search</span>
-          <input ref={searchRef} type="search" value={filters.query} onChange={(e) => set('query', e.target.value)} placeholder="Name, colour, SKU…" />
+          <input ref={searchRef} type="search" value={filters.query} onChange={(e) => set('query', e.target.value)} placeholder="Name, colour, brand, SKU…" />
         </label>
         <label>
           <span className="label">Category</span>
-          <select value={filters.category} onChange={(e) => set('category', e.target.value as ProductFilters['category'])}>
+          <select value={filters.category} onChange={(e) => set('category', e.target.value)}>
             <option value="all">All</option>
-            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+            {categories.map((c) => <option key={c.id}>{c.name}</option>)}
           </select>
         </label>
         {sizes.length > 0 && (
@@ -84,6 +97,7 @@ export default function Shop() {
         <label>
           <span className="label">Sort</span>
           <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+            <option value="newest">Newest first</option>
             <option value="featured">Featured</option>
             <option value="price-asc">Price: low to high</option>
             <option value="price-desc">Price: high to low</option>
@@ -93,19 +107,26 @@ export default function Shop() {
       </form>
 
       <p className="result-count" role="status" aria-live="polite">
-        {loading ? 'Loading…' : `${results.length} ${results.length === 1 ? 'shirt' : 'shirts'}`}
+        {loading ? 'Loading…' : `${results.length} ${results.length === 1 ? 'item' : 'items'}`}
       </p>
 
-      {error && <p className="error" role="alert">We couldn&apos;t load the shirts: {error}</p>}
+      {error && <p className="error" role="alert">We couldn&apos;t load the items: {error}</p>}
 
       {!loading && results.length === 0 ? (
         <div className="empty-state">
-          <p>No shirts match those filters.</p>
-          {active && <button type="button" className="secondary" onClick={() => setFilters(DEFAULT_FILTERS)}>Clear filters</button>}
+          <p>No items match those filters.</p>
+          {active && <button type="button" className="secondary" onClick={() => { setFilters(DEFAULT_FILTERS); setVisible(PAGE_SIZE) }}>Clear filters</button>}
         </div>
       ) : (
         <div className="products">
-          {results.map((p) => <ProductCard key={p.id} product={p} onQuickView={setQuick} />)}
+          {shown.map((p) => <ProductCard key={p.id} product={p} onQuickView={setQuick} />)}
+        </div>
+      )}
+      {results.length > shown.length && (
+        <div className="load-more">
+          <button type="button" className="secondary" onClick={() => setVisible((v) => v + PAGE_SIZE)}>
+            Show more ({results.length - shown.length} more)
+          </button>
         </div>
       )}
       <QuickView product={quick} onClose={() => setQuick(null)} />

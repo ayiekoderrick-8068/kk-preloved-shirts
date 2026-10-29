@@ -14,7 +14,7 @@ export default function AddToBagButton({ product, className = 'primary full' }: 
   if (!canAddToBag(product)) {
     return (
       <button type="button" className={className} disabled>
-        Sold out
+        {product.status === 'reserved' ? 'Reserved' : 'Sold out'}
       </button>
     )
   }

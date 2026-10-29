@@ -64,9 +64,14 @@ describe('buildOrderMessage', () => {
     const url = buildAvailabilityUrl('254782718496', SEED_PRODUCTS[0], 'KK Pre-Loved Shirts', 'https://example.com/')
     expect(url.startsWith('https://wa.me/254782718496?text=')).toBe(true)
     const text = decodeURIComponent(url.split('?text=')[1])
-    expect(text).toContain('Butterfly Print Camp Shirt [KK-01]')
+    expect(text).toContain("Hello KK Pre-Loved Shirts! I'm interested in Butterfly Print Camp Shirt, size to be confirmed, priced at KES 350. Is it still available?")
+    expect(text).toContain('SKU: KK-01')
     expect(text).toContain('https://example.com/shop/kk-01')
-    expect(text).toContain('still available')
+  })
+  it('builds the inquiry from the real product size and price, using the discount when set', () => {
+    const p = { ...SEED_PRODUCTS[0], size: 'L', priceKes: 1500, discountPriceKes: 1200 }
+    const text = decodeURIComponent(buildAvailabilityUrl('254712345678', p, 'Kendy Thrift Shop', 'https://example.com').split('?text=')[1])
+    expect(text).toContain("Hello Kendy Thrift Shop! I'm interested in Butterfly Print Camp Shirt, size L, priced at KES 1,200.")
   })
   it('url-encodes into a wa.me link', () => {
     const url = buildWhatsAppUrl('+254 712 345 678', 'Hi & bye\nline 2')

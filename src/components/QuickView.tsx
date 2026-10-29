@@ -1,13 +1,15 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { priceLabel } from '../lib/inventory'
-import { pairDealText } from '../lib/pricing'
+import { stockState } from '../lib/inventory'
+import { isStandardPrice, pairDealText } from '../lib/pricing'
 import type { Product } from '../types'
 import AddToBagButton from './AddToBagButton'
 import Modal from './Modal'
+import PriceBlock from './PriceBlock'
 import ProductImage from './ProductImage'
 import ProductSpecs from './ProductSpecs'
+import WhatsAppButton from './WhatsAppButton'
 
 interface Props {
   product: Product | null
@@ -34,11 +36,12 @@ export default function QuickView({ product: p, onClose }: Props) {
           <div className="detail-info">
             <div className="eyebrow">{p.category}</div>
             <h2>{p.name}</h2>
-            <div className="price big">{priceLabel(p)}</div>
-            {p.priceKes === null && <p className="deal">{pairDealText()}</p>}
+            <PriceBlock product={p} />
+            {isStandardPrice(p) && <p className="deal">{pairDealText()}</p>}
             {p.description && <p>{p.description}</p>}
             <ProductSpecs product={p} />
             <AddToBagButton product={p} />
+            {stockState(p) !== 'sold' && <WhatsAppButton product={p} className="whatsapp-btn secondary-style" />}
             <Link to={`/shop/${p.id}`} className="text-link" onClick={onClose}>
               View full details
             </Link>

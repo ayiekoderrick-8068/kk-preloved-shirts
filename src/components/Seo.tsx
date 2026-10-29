@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useSettings } from '../context/SettingsContext'
 import { config } from '../lib/config'
 
 interface Props {
@@ -20,13 +21,16 @@ function setMeta(selector: string, attr: 'name' | 'property', key: string, conte
 }
 
 /** Per-route title, description, canonical and Open Graph tags (index.html carries the static defaults for crawlers). */
-export default function Seo({ title, description, path = '/', image = '/logo.png', noindex }: Props) {
+export default function Seo({ title, description, path = '/', image, noindex }: Props) {
+  const { settings } = useSettings()
+  const shopName = settings.shopName
+  const picture = image ?? settings.logoUrl
   useEffect(() => {
-    const full = title.includes(config.storeName) ? title : `${title} | ${config.storeName}`
+    const full = title.includes(shopName) ? title : `${title} | ${shopName}`
     document.title = full
     const base = config.siteUrl || window.location.origin
     const url = base + path
-    const img = image.startsWith('http') ? image : base + image
+    const img = picture.startsWith('http') ? picture : base + picture
     setMeta('meta[name="description"]', 'name', 'description', description)
     setMeta('meta[property="og:title"]', 'property', 'og:title', full)
     setMeta('meta[property="og:description"]', 'property', 'og:description', description)
@@ -40,6 +44,6 @@ export default function Seo({ title, description, path = '/', image = '/logo.png
       document.head.appendChild(link)
     }
     link.href = url
-  }, [title, description, path, image, noindex])
+  }, [title, description, path, picture, shopName, noindex])
   return null
 }
