@@ -110,7 +110,7 @@ Open **Shop Settings**, change what you need, then press **Save settings**. Chan
 | **WhatsApp Business number or link** | Your number (for example `0712 345 678` or `+254712345678`) or a link like `https://wa.me/254712345678`. Customers' "Chat on WhatsApp" buttons will use this. Each product button includes the product name, size, price and link. |
 | **Instagram link** | The full link to your profile, for example `https://www.instagram.com/youraccount` |
 | **TikTok link** | The full link, for example `https://www.tiktok.com/@youraccount` |
-| **Shop slogan** | Your approved wording. Leave it blank until you have decided; nothing is shown until you fill it in. |
+| **Shop slogan** | Currently "We scour the best thrifts". Change the wording here whenever you like; leave it blank to show no slogan. |
 | **Store announcement** | A short message shown in a bar at the top of every page (for example a holiday notice). Leave blank for none. |
 | **Shop name, Contact email, Phone number for calls, Shop description** | Shown across the site and in the footer |
 | **Logo** | **Upload a new logo** (square images work best). **Use the standard logo** goes back to the shop's standard KK logo. |

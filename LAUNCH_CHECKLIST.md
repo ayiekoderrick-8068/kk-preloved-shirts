@@ -9,7 +9,10 @@ Supplied by the owner and already in the site (please re-check): WhatsApp/call 0
 - [ ] Confirm the booking fee really is KES 200 *per item* (the original wording was "@200")
 - [ ] Confirm which number is primary: order requests go to 0782718496
 - [ ] Public contact email → `VITE_CONTACT_EMAIL`
-- [ ] Official Instagram URL → `VITE_INSTAGRAM_URL`
+- [x] Instagram `k.kpre_loved_shirts` and TikTok `@k.kpre_loved_shirts` (TikTok name "Kk_Pre-Loved Shirts") supplied 2026-10-29 and set as defaults; change in Shop Settings if they differ
+- [x] Slogan "We scour the best thrifts" confirmed by the owner ("scour", not "scout")
+- [ ] WhatsApp Business: the owner **does not have a WhatsApp Business account yet** ("I can get one"). Order requests currently go to the ordinary WhatsApp number 0782718496 (also shown in the TikTok bio with 0741973359). Once she creates the Business account, enter its number in Shop Settings
+- [ ] Logo: the illustrated "PREE-LOVED" logo is also her **TikTok profile picture**. Confirm she is happy to move to the new KK tag, or keep the illustration (re-upload it in Shop Settings, Logo)
 - [ ] Store city and pickup arrangements → `VITE_STORE_CITY`, `VITE_PICKUP_INFO`
 - [ ] Delivery locations, costs / quote process and timing → `VITE_DELIVERY_INFO`
 - [ ] Approved returns/exchanges policy → `VITE_RETURNS_POLICY`

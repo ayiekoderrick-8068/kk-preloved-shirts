@@ -100,10 +100,15 @@ describe('shop settings', () => {
     expect(merged.logoUrl).toBe(DEFAULT_SETTINGS.logoUrl)
     expect(merged.instagramUrl).toBe('https://www.instagram.com/k')
   })
-  it('does not invent a slogan, TikTok or announcement', () => {
-    expect(DEFAULT_SETTINGS.slogan).toBe('')
-    expect(DEFAULT_SETTINGS.tiktokUrl).toBe('')
+  it('uses the owner-supplied slogan and social links, and invents no announcement', () => {
+    expect(DEFAULT_SETTINGS.slogan).toBe('We scour the best thrifts')
+    expect(DEFAULT_SETTINGS.instagramUrl).toBe('https://www.instagram.com/k.kpre_loved_shirts')
+    expect(DEFAULT_SETTINGS.tiktokUrl).toBe('https://www.tiktok.com/@k.kpre_loved_shirts')
     expect(DEFAULT_SETTINGS.announcement).toBe('')
+  })
+  it('owner-supplied social links pass the same validation the database enforces', () => {
+    expect(DEFAULT_SETTINGS.instagramUrl).toMatch(/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._/-]+\/?$/i)
+    expect(DEFAULT_SETTINGS.tiktokUrl).toMatch(/^https:\/\/(www\.|vm\.)?tiktok\.com\/[A-Za-z0-9@._/-]+\/?$/i)
   })
   it('builds the wa.me link only from a real number', () => {
     expect(whatsappLink('254712345678')).toBe('https://wa.me/254712345678')

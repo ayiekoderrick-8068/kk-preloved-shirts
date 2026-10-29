@@ -22,8 +22,9 @@ export const config = {
   /** Pochi la Biashara number for booking payments (local format, as customers type it). */
   pochiNumber: clean(env.VITE_POCHI_NUMBER) || '0113138779',
   contactEmail: clean(env.VITE_CONTACT_EMAIL),
-  instagramUrl: clean(env.VITE_INSTAGRAM_URL),
-  tiktokUrl: clean(env.VITE_TIKTOK_URL),
+  /** Handles supplied by the owner (Instagram in chat, TikTok from the profile screenshot), 2026-10-29. */
+  instagramUrl: clean(env.VITE_INSTAGRAM_URL) || 'https://www.instagram.com/k.kpre_loved_shirts',
+  tiktokUrl: clean(env.VITE_TIKTOK_URL) || 'https://www.tiktok.com/@k.kpre_loved_shirts',
   storeCity: clean(env.VITE_STORE_CITY),
   pickupInfo: clean(env.VITE_PICKUP_INFO),
   deliveryInfo: clean(env.VITE_DELIVERY_INFO),

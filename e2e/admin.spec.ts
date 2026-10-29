@@ -305,11 +305,13 @@ test('shop settings: validated, saved, and shown across the public site', async 
   await expect(page.getByLabel('Shop slogan')).toHaveValue('Test slogan only')
 })
 
-test('slogan, TikTok and announcement stay empty until the owner sets them', async ({ page }) => {
+test('owner-supplied slogan and social links show by default; the announcement stays empty until set', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('region', { name: 'Store announcement' })).toHaveCount(0)
-  await expect(page.locator('.logo-slogan')).toHaveCount(0)
-  await expect(page.locator('footer').getByRole('link', { name: /TikTok|Instagram/ })).toHaveCount(0)
+  await expect(page.locator('.logo-slogan')).toHaveText('We scour the best thrifts')
+  const footer = page.locator('footer')
+  await expect(footer.getByRole('link', { name: /Instagram/ })).toHaveAttribute('href', 'https://www.instagram.com/k.kpre_loved_shirts')
+  await expect(footer.getByRole('link', { name: /TikTok/ })).toHaveAttribute('href', 'https://www.tiktok.com/@k.kpre_loved_shirts')
   // WhatsApp still works with the shop's original number.
   await expect(page.getByRole('link', { name: /Chat with us on WhatsApp/ })).toHaveAttribute('href', /^https:\/\/wa\.me\/2547/)
 })

@@ -4,11 +4,12 @@ import { config } from './config'
 /**
  * Built-in defaults (from the owner's original details and environment variables). The owner's saved settings
  * override any field that is not blank, so the site always has a name, logo and WhatsApp line to fall back on.
- * The slogan, TikTok and announcement default to blank: nothing is invented for the shop.
+ * The slogan ("We scour the best thrifts", confirmed by the owner 2026-10-29, "scour" not "scout") and the
+ * social links come from the owner. The announcement stays blank: nothing is invented for the shop.
  */
 export const DEFAULT_SETTINGS: ShopSettings = {
   shopName: config.storeName,
-  slogan: '',
+  slogan: 'We scour the best thrifts',
   logoUrl: '/logo.png',
   whatsappNumber: config.whatsappNumber,
   instagramUrl: config.instagramUrl,
