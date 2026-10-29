@@ -17,11 +17,11 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
 
   // Shop: search narrows results, empty state offers a reset.
   await page.getByRole('link', { name: 'Shop', exact: true }).first().click()
-  await expect(page.getByText('36 shirts')).toBeVisible()
+  await expect(page.getByText('36 items')).toBeVisible()
   await page.getByRole('searchbox').fill('hibiscus')
-  await expect(page.getByText('1 shirt', { exact: true })).toBeVisible()
+  await expect(page.getByText('1 item', { exact: true })).toBeVisible()
   await page.getByRole('searchbox').fill('zzzz')
-  await expect(page.getByText('No shirts match those filters.')).toBeVisible()
+  await expect(page.getByText('No items match those filters.')).toBeVisible()
   await page.getByRole('button', { name: 'Clear filters' }).click()
 
   // Deep-linkable product page with honest unverified details.
@@ -256,7 +256,8 @@ test('product cards: "Check availability" opens a WhatsApp chat about that exact
   const href = (await link.getAttribute('href')) ?? ''
   expect(href).toMatch(/^https:\/\/wa\.me\/254782718496\?text=/)
   const text = decodeURIComponent(href.split('?text=')[1])
-  expect(text).toContain('Butterfly Print Camp Shirt [KK-01]')
+  expect(text).toContain("I'm interested in Butterfly Print Camp Shirt")
+  expect(text).toContain('SKU: KK-01')
   expect(text).toContain('/shop/kk-01')
   await expect(card.getByRole('button', { name: 'Quick view' })).toBeVisible()
   const [popup] = await Promise.all([context.waitForEvent('page'), link.click()])
@@ -274,7 +275,7 @@ test('mobile menu opens and links work', async ({ page }) => {
 
 test('unknown product shows not-found, admin is not indexed', async ({ page }) => {
   await page.goto('/shop/does-not-exist')
-  await expect(page.getByText("That shirt isn't listed any more.")).toBeVisible()
+  await expect(page.getByText("That item isn't listed any more.")).toBeVisible()
   await page.goto('/admin')
   await expect(page.getByText('Demo mode - no database connected.')).toBeVisible()
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow')

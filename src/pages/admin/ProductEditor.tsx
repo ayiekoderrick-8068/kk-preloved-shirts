@@ -73,7 +73,12 @@ function EditorForm({ initial, isNew }: { initial: Product; isNew: boolean }) {
   const [saveError, setSaveError] = useState('')
   const [saved, setSaved] = useState<Product | null>(null)
   const [preview, setPreview] = useState(false)
-  const wasDraft = initial.status === 'draft'
+  // Whether this save is a first publication. Fixed at mount: after saving, `initial` refreshes from the list,
+  // so deriving it again would turn "Published" into "Saved".
+  const [startedUnpublished] = useState(isNew || initial.status === 'draft')
+  // Status as last saved, to pick the right buttons (Publish for new/draft items, Save changes for live ones).
+  const [savedStatus, setSavedStatus] = useState<Product['status'] | null>(isNew ? null : initial.status)
+  const unpublished = savedStatus === null || savedStatus === 'draft'
 
   const set = <K extends keyof Product>(k: K, v: Product[K]) => setP((x) => ({ ...x, [k]: v }))
   const m = p.measurements ?? {}
@@ -104,6 +109,7 @@ function EditorForm({ initial, isNew }: { initial: Product; isNew: boolean }) {
       await save(next)
       setP(next)
       setSaved(next)
+      setSavedStatus(next.status)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : 'Could not save. Please try again.')
@@ -114,7 +120,7 @@ function EditorForm({ initial, isNew }: { initial: Product; isNew: boolean }) {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
-    void submit(isNew || wasDraft ? 'publish' : 'save')
+    void submit(unpublished ? 'publish' : 'save')
   }
 
   const livePublished = saved && saved.status !== 'draft' && saved.status !== 'archived'
@@ -126,11 +132,11 @@ function EditorForm({ initial, isNew }: { initial: Product; isNew: boolean }) {
       {saved && (
         <div className="saved-panel" role="status">
           <p>
-            <strong>✓ {saved.status === 'draft' ? 'Draft saved.' : livePublished && (isNew || wasDraft) ? 'Published.' : 'Saved.'}</strong>{' '}
+            <strong>✓ {saved.status === 'draft' ? 'Draft saved.' : livePublished && startedUnpublished ? 'Published.' : 'Saved.'}</strong>{' '}
             {saved.status === 'draft'
               ? `“${saved.name || saved.sku}” is not visible to customers until you publish it.`
               : livePublished
-                ? `“${saved.name}” is live in the shop${saved.publishedAt && Date.now() - new Date(saved.publishedAt).getTime() < 60_000 ? ' and listed under New Arrivals' : ''}.`
+                ? `“${saved.name}” is live in the shop${startedUnpublished ? ' and listed under New Arrivals' : ''}.`
                 : `“${saved.name}” is saved (${STATUS_LABELS[saved.status]}), so it is hidden from the shop.`}
           </p>
           <div className="admin-actions">
@@ -239,10 +245,13 @@ function EditorForm({ initial, isNew }: { initial: Product; isNew: boolean }) {
 
       <div className="admin-actions sticky-actions">
         <button className="primary" type="submit" disabled={busy}>
-          {busy ? 'Saving…' : isNew || wasDraft ? 'Publish' : 'Save changes'}
+          {busy ? 'Saving…' : unpublished ? 'Publish' : 'Save changes'}
         </button>
-        {(isNew || wasDraft) && <button className="secondary" type="button" disabled={busy} onClick={() => void submit('draft')}>Save draft</button>}
-        {!isNew && !wasDraft && p.status !== 'draft' && <button className="secondary" type="button" disabled={busy} onClick={() => void submit('draft')}>Unpublish to draft</button>}
+        {unpublished ? (
+          <button className="secondary" type="button" disabled={busy} onClick={() => void submit('draft')}>Save draft</button>
+        ) : (
+          <button className="secondary" type="button" disabled={busy} onClick={() => void submit('draft')}>Unpublish to draft</button>
+        )}
         <button className="secondary" type="button" onClick={() => setPreview((v) => !v)} aria-pressed={preview}>{preview ? 'Hide preview' : 'Preview'}</button>
         <Link to="/admin/products" className="text-link">Cancel</Link>
       </div>
