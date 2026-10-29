@@ -14,6 +14,10 @@ This guide is for the shop owner. You do not need to touch any code. Everything 
 
 If you are told "this account is not an admin", the owner account has not been added yet. Ask your developer.
 
+> **About the screenshots in this guide.** They were taken from the real running site in **demo mode** (no database connected), which is why the yellow "Demo mode" banner shows and why the sign-in step has no picture: the sign-in form only appears once the live database is connected. The example item is a made-up sample, not part of the shop's stock. Your own screens look the same, without the yellow banner.
+
+![The admin overview](screenshots/01-admin-overview.png)
+
 ---
 
 ## 2. Add a new item
@@ -42,6 +46,8 @@ If you are told "this account is not an admin", the owner account has not been a
 4. Optional: open **More garment details** to add measurements (cm, laid flat), flaws, or tick **Inspected: no flaws found**. Customers like this detail.
 5. Tick **Feature on the home page** if you want the item shown on the home page.
 
+![The Add New Stock form, filled in with three photos](screenshots/02-add-stock-form.png)
+
 ---
 
 ## 3. Upload photos
@@ -59,6 +65,10 @@ If you are told "this account is not an admin", the owner account has not been a
 1. Press **Preview** to see exactly how customers will see the item. Press **Hide preview** to close it.
 2. Press **Publish** to make it live, or **Save draft** to keep working on it later (customers will not see drafts).
 3. A green message says **Published** and that the item is **listed under New Arrivals**. Press **View in shop** to see it.
+
+![The preview of the item](screenshots/03-preview.png)
+
+![The green Published message after pressing Publish](screenshots/04-published.png)
 
 New items appear on the shop and under **New arrivals** straight away. **There is nothing to deploy and no developer needed.** Items stay marked "New arrival" for 30 days after publishing, newest first. Customers can also find them with the shop search.
 
@@ -80,6 +90,8 @@ Open **Inventory** for the quick table. You can **search** (name, SKU, colour, b
 | Hide an item without deleting it | Press **Archive**. **Restore** brings it back. |
 | Edit anything else (photos, description, size…) | Press **Edit** |
 | Remove an item for good | Press **Delete**, then confirm. Archive is safer. |
+
+![The Inventory table: search, price and quantity boxes, status and action buttons](screenshots/05-inventory.png)
 
 Good to know:
 
@@ -103,6 +115,8 @@ Open **Shop Settings**, change what you need, then press **Save settings**. Chan
 | **Shop name, Contact email, Phone number for calls, Shop description** | Shown across the site and in the footer |
 | **Logo** | **Upload a new logo** (square images work best). **Use the original logo** goes back to the first one. |
 
+![Shop Settings](screenshots/06-shop-settings.png)
+
 If you leave Instagram or TikTok blank, that icon is simply not shown. If a link is not valid, the page tells you what to fix.
 
 ---
@@ -119,4 +133,12 @@ If you leave Instagram or TikTok blank, that icon is simply not shown. If a link
 
 ---
 
-*Screenshots: not included yet. They need the browser test tooling, which is blocked on the development machine (see the project notes).*
+## 8. What your customers see
+
+The new item appears first in the shop (newest first) with a **New arrival** tag, and has its own page with a photo gallery, zoom, details and an **Ask on WhatsApp** button that includes the item's name, size, price and link. First on a computer, then on a phone:
+
+![The shop with the new arrival first](screenshots/07-shop-new-arrival.png)
+
+![The item's page](screenshots/08-product-page.png)
+
+![The shop on a phone](screenshots/09-phone-shop.png)
