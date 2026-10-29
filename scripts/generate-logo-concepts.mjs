@@ -41,9 +41,9 @@ const lockup = (mono, t) =>
 
 const mark = (mono) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="KS monogram">${mono}</svg>`
 
-const favicon = (id, t) => {
+const favicon = (_id, t) => {
   // Favicons must read at 16-32px: solid accent square with a bold, simplified KS.
-  const bg = id === 'b-tag' ? t.ink : t.accent
+  const bg = t.accent
   const fg = '#f6f4ef'
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="26" fill="${bg}"/>${strokes(K(fg, -4).replace('stroke="' + fg + '"', `stroke="${fg}"`) + S(fg, -4))}</svg>`
 }

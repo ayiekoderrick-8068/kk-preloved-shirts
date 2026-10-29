@@ -18,6 +18,22 @@ Open `concept-sheet.png` to compare all three on light and dark backgrounds.
 | **B: Tag** | KS knocked out of a terracotta clothing tag with a stitched edge; the most recognisable at favicon size |
 | **C: Open** | KS with no container; quiet and editorial, ink K and terracotta S |
 
+## Comparison and recommendation
+
+`concepts/comparison.png` shows every concept at favicon (16 / 32 / 48 px), small, desktop-header and phone-header sizes, on both light and dark backgrounds.
+
+| | A Hanger | B Tag | C Open |
+|---|---|---|---|
+| 16 px favicon | hook and thin ring vanish | solid shape, clear | letters thin out |
+| Phone header (36 px) | hook is a speck | clear | weak presence, reads like plain text |
+| Dark background | good | good | good |
+| Says "clothing / thrift" | strongest idea | tag and stitch say "pre-loved" | none, only initials |
+| Distinct as an app icon | OK | strongest | weakest |
+
+**Recommendation: Concept B (Tag).** It is the only one that stays crisp and recognisable at 16 px and on a phone header, it gives a ready-made square icon for the favicon, home-screen and social profile pictures, and the clothing-tag and stitching detail tells the "pre-loved" story. Use the light lockup on the paper background and the dark lockup on the dark footer.
+
+Caveats before approving any concept: confirm the shop name first (see above) because the wordmark text depends on it, and note these are concept drawings. A designer should refine letter shapes and spacing before print use.
+
 Colours come from the existing site palette: ink `#262622`, terracotta `#a24d35`, paper `#f6f4ef`. The dark versions use a lighter terracotta `#e39a7f`.
 
 For each concept there are: `concept-<x>-monogram-light|dark.svg`, `concept-<x>-lockup-light|dark.svg` (monogram + wordmark) and `concept-<x>-favicon.svg` / `-favicon-32.png`.
