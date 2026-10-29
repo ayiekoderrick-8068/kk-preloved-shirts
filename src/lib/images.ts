@@ -22,6 +22,37 @@ export function srcSetFor(url: string): string | undefined {
   return IMAGE_WIDTHS.map((w) => `${variantUrl(url, w)} ${w}w`).join(', ')
 }
 
+const STATIC_RE = /^(\/assets\/products\/p-\d+)\.webp$/
+/** Static photos are 800-1100px wide (full size ~880w); `scripts/optimize-images.mjs` derives the other files. */
+const STATIC_FULL_WIDTH = 880
+const STATIC_SMALL_WIDTH = 480
+
+/**
+ * Responsive sources for the built-in shop photos: an AVIF and a WebP `srcset`, each with a phone-sized (480w)
+ * and the full-size file. Returns undefined for uploaded or external photos, which use `srcSetFor` instead.
+ */
+export function staticSources(url: string): { avif: string; webp: string } | undefined {
+  const m = STATIC_RE.exec(url)
+  if (!m) return undefined
+  const base = m[1]
+  return {
+    avif: `${base}-${STATIC_SMALL_WIDTH}.avif ${STATIC_SMALL_WIDTH}w, ${base}.avif ${STATIC_FULL_WIDTH}w`,
+    webp: `${base}-${STATIC_SMALL_WIDTH}.webp ${STATIC_SMALL_WIDTH}w, ${base}.webp ${STATIC_FULL_WIDTH}w`,
+  }
+}
+
+/** The default logo has pre-made small copies; a logo uploaded by the owner is used as is. */
+export function logoSources(url: string, size: number): { src: string; webpSrcSet: string; pngSrcSet: string } | undefined {
+  if (url !== '/logo.png') return undefined
+  const one = size <= 56 ? 112 : 224
+  const two = 224
+  return {
+    src: `/logo-${one}.png`,
+    webpSrcSet: `/logo-${one}.webp 1x, /logo-${two}.webp 2x`,
+    pngSrcSet: `/logo-${one}.png 1x, /logo-${two}.png 2x`,
+  }
+}
+
 export interface Variant {
   width: number
   blob: Blob

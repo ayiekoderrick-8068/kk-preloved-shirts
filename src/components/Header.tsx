@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useSettings } from '../context/SettingsContext'
+import LogoImage from './LogoImage'
 import SocialLinks from './SocialLinks'
 import WhatsAppButton from './WhatsAppButton'
 
@@ -28,7 +29,7 @@ export default function Header() {
     <header className="nav">
       <div className="nav-inner">
         <Link className="logo" to="/" aria-label={`${settings.shopName} home`}>
-          <img src={settings.logoUrl} alt="" width="56" height="56" />
+          <LogoImage url={settings.logoUrl} size={56} />
           <span className="logo-words">
             <span className="logo-text">{settings.shopName}</span>
             {settings.slogan && <span className="logo-slogan">{settings.slogan}</span>}

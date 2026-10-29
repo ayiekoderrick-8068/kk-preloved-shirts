@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import HangingRail from '../components/HangingRail'
 import HowItWorks from '../components/HowItWorks'
 import ProductCard from '../components/ProductCard'
+import ProductImage from '../components/ProductImage'
 import QuickView from '../components/QuickView'
 import Seo from '../components/Seo'
 import { useProducts } from '../context/ProductsContext'
@@ -87,7 +88,7 @@ export default function Home() {
         </div>
         <div className="editorial-visual collage">
           {collage.map((p, i) => (
-            <img key={p.id} className={`collage-${i + 1}`} src={p.images[0]} alt={p.name} loading="lazy" />
+            <ProductImage key={p.id} className={`collage-${i + 1}`} src={p.images[0]} alt={p.name} loading="lazy" sizes="(max-width: 760px) 45vw, 22vw" />
           ))}
         </div>
       </section>

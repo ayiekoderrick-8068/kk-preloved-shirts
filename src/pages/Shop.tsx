@@ -119,7 +119,7 @@ export default function Shop() {
         </div>
       ) : (
         <div className="products">
-          {shown.map((p) => <ProductCard key={p.id} product={p} onQuickView={setQuick} />)}
+          {shown.map((p, i) => <ProductCard key={p.id} product={p} onQuickView={setQuick} priority={i < 4} />)}
         </div>
       )}
       {results.length > shown.length && (

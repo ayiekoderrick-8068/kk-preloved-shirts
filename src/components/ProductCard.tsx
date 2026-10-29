@@ -9,11 +9,13 @@ import ProductImage from './ProductImage'
 interface Props {
   product: Product
   onQuickView: (p: Product) => void
+  /** First row of a page: load the main photo right away instead of lazily. */
+  priority?: boolean
 }
 
 const CARD_SIZES = '(max-width: 760px) 50vw, (max-width: 1050px) 33vw, 25vw'
 
-export default function ProductCard({ product: p, onQuickView }: Props) {
+export default function ProductCard({ product: p, onQuickView, priority }: Props) {
   const { settings, hasWhatsApp, siteOrigin } = useSettings()
   const status = cardStatus(p)
   const unavailable = status.kind === 'sold' || status.kind === 'reserved'
@@ -23,7 +25,7 @@ export default function ProductCard({ product: p, onQuickView }: Props) {
     <article className={`product${unavailable ? ' is-sold' : ''}`}>
       <Link to={`/shop/${p.id}`} className="product-visual" aria-label={`${p.name}, ${priceLabel(p)}`}>
         {badge && <span className={`tag${badge === 'New arrival' ? ' tag-new' : ''}`}>{badge}</span>}
-        <ProductImage src={p.images[0]} alt="" loading="lazy" sizes={CARD_SIZES} />
+        <ProductImage src={p.images[0]} alt="" loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} sizes={CARD_SIZES} />
         {p.images[1] && <ProductImage className="alt-photo" src={p.images[1]} alt="" loading="lazy" sizes={CARD_SIZES} />}
       </Link>
       <div className="product-meta">

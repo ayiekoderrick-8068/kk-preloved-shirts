@@ -1,3 +1,4 @@
+import LogoImage from '../components/LogoImage'
 import Seo from '../components/Seo'
 import WhatsAppButton from '../components/WhatsAppButton'
 import { useSettings } from '../context/SettingsContext'
@@ -16,7 +17,7 @@ export function About() {
       <p className="eyebrow">About</p>
       <h1>{settings.shopName}</h1>
       {settings.slogan && <p className="about-slogan">{settings.slogan}</p>}
-      <img className="about-logo" src={settings.logoUrl} alt={`${settings.shopName} logo`} width="200" height="200" />
+      <LogoImage className="about-logo" url={settings.logoUrl} size={200} alt={`${settings.shopName} logo`} />
       <p>Upgrade your wardrobe with our curated collection of pre-loved clothing. We scour the best thrifts to bring you unique, one-of-a-kind pieces that blend style, comfort and sustainability.</p>
       <p>Join us for a shopping experience that&apos;s all about finding hidden gems and rocking your personal style.</p>
       <p>Every piece is usually the only one we have, so we list size, measurements, condition and flaws for each item once it has been checked. Until then you will see &ldquo;Details to confirm&rdquo; instead of a guess.</p>

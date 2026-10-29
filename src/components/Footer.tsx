@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useSettings } from '../context/SettingsContext'
+import LogoImage from './LogoImage'
 import SocialLinks from './SocialLinks'
 import WhatsAppButton from './WhatsAppButton'
 
@@ -10,7 +11,7 @@ export default function Footer() {
       <div className="footer-main">
         <div>
           <div className="footer-brand">
-            <img src={settings.logoUrl} alt="" width="48" height="48" loading="lazy" />
+            <LogoImage url={settings.logoUrl} size={48} lazy />
             <h3>{settings.shopName.toUpperCase()}</h3>
           </div>
           {settings.slogan && <p className="footer-slogan">{settings.slogan}</p>}

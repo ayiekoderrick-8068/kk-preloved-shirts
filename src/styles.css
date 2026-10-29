@@ -454,3 +454,12 @@ td.wrap{white-space:normal;min-width:160px}
 }
 @media(hover:none){.product:hover{transform:none}.product-visual:hover .alt-photo{opacity:0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.product:hover{transform:none}}
+
+/* Responsive photos: <picture> must not create a box of its own, so existing img sizing rules keep working. */
+picture{display:contents}
+/* Loading placeholder: a soft moving sheen behind photos until they arrive (motion is skipped if the visitor prefers less). */
+.product-visual,.detail-picture{background:linear-gradient(100deg,#eae7df 30%,#f3f1ea 50%,#eae7df 70%) 0 0/200% 100%;animation:photo-sheen 1.6s linear infinite}
+.product-visual:has(img.is-loaded){animation:none;background:#eae7df}
+.detail-picture:has(img.is-loaded){animation:none;background:#e7e4dc}
+@keyframes photo-sheen{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.product-visual,.detail-picture{animation:none}}
