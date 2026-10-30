@@ -40,7 +40,7 @@ describe('buildOrderMessage', () => {
   const lines = [{ productId: SEED_PRODUCTS[0].id, qty: 1 }]
   it('lists items, flags unconfirmed size, and states the delivery fee is to confirm', () => {
     const priced = SEED_PRODUCTS.map((p, i) => (i === 0 ? { ...p, priceKes: 1500 } : p))
-    const msg = buildOrderMessage(lines, priced, customer, 'KK Pre-Loved Shirts')
+    const msg = buildOrderMessage(lines, priced, customer, 'KK Preloved Shirts')
     expect(msg).toContain('Butterfly Print Camp Shirt [KK-01]')
     expect(msg).toContain('Size to confirm')
     expect(msg).toContain('KES 1,500')
@@ -53,18 +53,18 @@ describe('buildOrderMessage', () => {
       { productId: SEED_PRODUCTS[0].id, qty: 1 },
       { productId: SEED_PRODUCTS[1].id, qty: 1 },
     ]
-    const msg = buildOrderMessage(two, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
+    const msg = buildOrderMessage(two, SEED_PRODUCTS, customer, 'KK Preloved Shirts')
     expect(msg).toContain('KES 350')
     expect(msg).toContain('Items subtotal: KES 600 (pair deal applied, saving KES 100)')
-    const one = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Pre-Loved Shirts')
+    const one = buildOrderMessage(lines, SEED_PRODUCTS, customer, 'KK Preloved Shirts')
     expect(one).toContain('Items subtotal: KES 350')
     expect(one).not.toContain('pair deal')
   })
   it('builds an availability enquiry with the shirt name, SKU and page link', () => {
-    const url = buildAvailabilityUrl('254782718496', SEED_PRODUCTS[0], 'KK Pre-Loved Shirts', 'https://example.com/')
+    const url = buildAvailabilityUrl('254782718496', SEED_PRODUCTS[0], 'KK Preloved Shirts', 'https://example.com/')
     expect(url.startsWith('https://wa.me/254782718496?text=')).toBe(true)
     const text = decodeURIComponent(url.split('?text=')[1])
-    expect(text).toContain("Hello KK Pre-Loved Shirts! I'm interested in Butterfly Print Camp Shirt, size to be confirmed, priced at KES 350. Is it still available?")
+    expect(text).toContain("Hello KK Preloved Shirts! I'm interested in Butterfly Print Camp Shirt, size to be confirmed, priced at KES 350. Is it still available?")
     expect(text).toContain('SKU: KK-01')
     expect(text).toContain('https://example.com/shop/kk-01')
   })

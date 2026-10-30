@@ -6,6 +6,7 @@ import WhatsAppButton from './WhatsAppButton'
 
 export default function Footer() {
   const { settings } = useSettings()
+  const phone = settings.contactPhone || settings.whatsappNumber
   return (
     <footer className="footer">
       <div className="footer-main">
@@ -20,6 +21,11 @@ export default function Footer() {
             <WhatsAppButton label="Chat on WhatsApp" />
             <SocialLinks />
           </div>
+          {phone && (
+            <p>
+              <a href={`tel:+${phone.replace(/\D/g, '')}`}>Call us</a>
+            </p>
+          )}
         </div>
         <div>
           <h4>EXPLORE</h4>

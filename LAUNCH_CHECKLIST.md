@@ -4,14 +4,14 @@ Nothing below has been invented; each item is either blank or marked "to confirm
 
 ## Business details still needed (set as env vars, see `.env.example`)
 
-Supplied by the owner and already in the site (please re-check): WhatsApp/call 0782718496 and 0741973359, booking fee "@200" (shown as KES 200 **per item**), payment via Pochi la Biashara 0113138779, shop description text, logo.
+Supplied by the owner and already in the site (please re-check): WhatsApp/call +254 782 718496 (the single official number), booking fee "@200" (shown as KES 200 **per item**), payment via Pochi la Biashara 0113138779, shop description text, logo.
 
 - [ ] Confirm the booking fee really is KES 200 *per item* (the original wording was "@200")
 - [ ] Confirm which number is primary: order requests go to 0782718496
 - [ ] Public contact email → `VITE_CONTACT_EMAIL`
 - [x] Instagram `k.kpre_loved_shirts` and TikTok `@k.kpre_loved_shirts` (TikTok name "Kk_Pre-Loved Shirts") supplied 2026-10-29 and set as defaults; change in Shop Settings if they differ
 - [x] Slogan "We scour the best thrifts" confirmed by the owner ("scour", not "scout")
-- [ ] WhatsApp Business: the owner **does not have a WhatsApp Business account yet** ("I can get one"). Order requests currently go to the ordinary WhatsApp number 0782718496 (also shown in the TikTok bio with 0741973359). Once she creates the Business account, enter its number in Shop Settings
+- [ ] WhatsApp Business: the owner **does not have a WhatsApp Business account yet** ("I can get one"). Order requests currently go to the ordinary WhatsApp number 0782718496. Once she creates the Business account, enter its number in Shop Settings
 - [x] Logo: the owner's supplied illustrated logo (also her TikTok profile picture) is the active logo. A KK tag alternative is shelved in `docs/brand/`
 - [ ] Confirm the banner spelling "PREE-LOVED" is intended (it is on her TikTok picture too); the site text says "Pre-loved"
 - [ ] Store city and pickup arrangements → `VITE_STORE_CITY`, `VITE_PICKUP_INFO`

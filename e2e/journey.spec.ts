@@ -8,7 +8,7 @@ test('customer journey: browse, add to bag, validate, prepare order request', as
     return route.fulfill({ status: 200, body: 'ok' })
   })
   await page.goto('/')
-  await expect(page).toHaveTitle(/KK Pre-Loved Shirts/)
+  await expect(page).toHaveTitle(/KK Preloved Shirts/)
 
   // Rail: visible next button moves the position counter.
   await expect(page.getByText('01 / 36')).toBeVisible()
@@ -270,7 +270,7 @@ test('mobile menu opens and links work', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Open menu' }).click()
   await page.getByRole('navigation', { name: 'Mobile' }).getByRole('link', { name: 'About' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'KK Pre-Loved Shirts' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'KK Preloved Shirts' })).toBeVisible()
 })
 
 test('unknown product shows not-found, admin is not indexed', async ({ page }) => {

@@ -2,7 +2,7 @@ import LogoImage from '../components/LogoImage'
 import Seo from '../components/Seo'
 import WhatsAppButton from '../components/WhatsAppButton'
 import { useSettings } from '../context/SettingsContext'
-import { config, localDisplay } from '../lib/config'
+import { config, intlDisplay } from '../lib/config'
 import { formatKes } from '../lib/inventory'
 import { DEFAULT_RULE, pairDealText } from '../lib/pricing'
 
@@ -41,8 +41,8 @@ export function Contact() {
           <dt>Call</dt>
           <dd>
             <span className="phone-row">
-              <a href={`tel:+${settings.contactPhone ? settings.contactPhone.replace(/\D/g, '') : config.secondaryPhone}`}>
-                {settings.contactPhone || localDisplay(config.secondaryPhone)}
+              <a href={`tel:+${settings.contactPhone ? settings.contactPhone.replace(/\D/g, '') : settings.whatsappNumber}`}>
+                {settings.contactPhone || intlDisplay(settings.whatsappNumber)}
               </a>
             </span>
           </dd>

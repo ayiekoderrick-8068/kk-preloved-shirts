@@ -10,13 +10,11 @@ const intl = (local: string): string => '254' + local.replace(/\D/g, '').replace
  * override them. A blank value means "not confirmed yet" and the UI shows an honest placeholder.
  */
 export const config = {
-  storeName: 'KK Pre-Loved Shirts',
+  storeName: 'KK Preloved Shirts',
   tagline: "Pre-loved men's shirts - unique, one-of-a-kind pieces.",
   siteUrl: clean(env.VITE_SITE_URL).replace(/\/$/, ''),
-  /** Order number: WhatsApp requests go here. Digits only, with country code. */
+  /** Official phone/WhatsApp number (+254 782 718496): orders and calls. Digits only, with country code. */
   whatsappNumber: clean(env.VITE_WHATSAPP_NUMBER).replace(/\D/g, '') || intl('0782718496'),
-  /** Second call/WhatsApp line supplied by the shop. */
-  secondaryPhone: clean(env.VITE_SECONDARY_PHONE).replace(/\D/g, '') || intl('0741973359'),
   /** Booking fee per item, in KES (shop wrote "@200"). */
   bookingFeeKes: Number(clean(env.VITE_BOOKING_FEE_KES)) || 200,
   /** Pochi la Biashara number for booking payments (local format, as customers type it). */
@@ -40,4 +38,10 @@ export const hasSupabase = Boolean(config.supabaseUrl && config.supabaseAnonKey)
 export const localDisplay = (intlNumber: string): string => {
   const d = '0' + intlNumber.replace(/^254/, '')
   return `${d.slice(0, 4)} ${d.slice(4, 7)} ${d.slice(7)}`
+}
+
+/** International display form, e.g. 254782718496 -> +254 782 718496. */
+export const intlDisplay = (intlNumber: string): string => {
+  const d = intlNumber.replace(/\D/g, '')
+  return `+${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}`
 }
