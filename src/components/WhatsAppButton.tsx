@@ -1,4 +1,3 @@
-import { useLocation } from 'react-router-dom'
 import { useSettings } from '../context/SettingsContext'
 import { buildAvailabilityUrl, buildWhatsAppUrl } from '../lib/order'
 import { logInquiry } from '../lib/shopRepo'
@@ -28,24 +27,6 @@ export default function WhatsAppButton({ product, label, className = 'whatsapp-b
     >
       <WhatsAppIcon size={18} />
       <span>{text}</span>
-    </a>
-  )
-}
-
-/** Round floating chat button, bottom-left so it never covers the bag toast. Hidden in the admin. */
-export function WhatsAppFloat() {
-  const { settings, whatsappUrl } = useSettings()
-  const { pathname } = useLocation()
-  if (!whatsappUrl || pathname.startsWith('/admin')) return null
-  return (
-    <a
-      className="whatsapp-float"
-      href={buildWhatsAppUrl(settings.whatsappNumber, `Hello ${settings.shopName}!`)}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Chat with us on WhatsApp (opens in a new tab)"
-    >
-      <WhatsAppIcon size={26} />
     </a>
   )
 }

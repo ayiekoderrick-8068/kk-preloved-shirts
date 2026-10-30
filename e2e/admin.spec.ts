@@ -290,7 +290,6 @@ test('shop settings: validated, saved, and shown across the public site', async 
     await expect(footer.getByRole('link', { name: /Instagram/ })).toHaveAttribute('href', 'https://www.instagram.com/test.shop')
     await expect(footer.getByRole('link', { name: /TikTok/ })).toHaveAttribute('href', 'https://www.tiktok.com/@test.shop')
     await expect(footer.getByRole('link', { name: /Chat on WhatsApp/ })).toHaveAttribute('href', /^https:\/\/wa\.me\/254700111222/)
-    await expect(page.getByRole('link', { name: /Chat with us on WhatsApp/ })).toHaveAttribute('href', /^https:\/\/wa\.me\/254700111222/)
   }
   // The displayed phone number is replaced by buttons (no raw WhatsApp number in the footer).
   await expect(page.locator('footer')).not.toContainText('254700111222')
@@ -313,7 +312,7 @@ test('owner-supplied slogan and social links show by default; the announcement s
   await expect(footer.getByRole('link', { name: /Instagram/ })).toHaveAttribute('href', 'https://www.instagram.com/k.kpre_loved_shirts')
   await expect(footer.getByRole('link', { name: /TikTok/ })).toHaveAttribute('href', 'https://www.tiktok.com/@k.kpre_loved_shirts')
   // WhatsApp still works with the shop's original number.
-  await expect(page.getByRole('link', { name: /Chat with us on WhatsApp/ })).toHaveAttribute('href', /^https:\/\/wa\.me\/2547/)
+  await expect(footer.getByRole('link', { name: /Chat on WhatsApp/ })).toHaveAttribute('href', /^https:\/\/wa\.me\/2547/)
 })
 
 for (const vp of [

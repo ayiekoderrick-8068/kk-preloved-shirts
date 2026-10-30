@@ -4,7 +4,6 @@ import AnnouncementBar from './components/AnnouncementBar'
 import CartDrawer from './components/CartDrawer'
 import Footer from './components/Footer'
 import Header from './components/Header'
-import { WhatsAppFloat } from './components/WhatsAppButton'
 import { CartProvider } from './context/CartContext'
 import { ProductsProvider } from './context/ProductsContext'
 import { SettingsProvider } from './context/SettingsContext'
@@ -53,7 +52,6 @@ export default function App() {
               </main>
               <Footer />
               <CartDrawer />
-              <WhatsAppFloat />
             </CartProvider>
           </ProductsProvider>
         </SettingsProvider>
